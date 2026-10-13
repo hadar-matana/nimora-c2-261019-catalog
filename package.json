@@ -1,0 +1,16 @@
+{
+  "name": "fashion-catalog-demo",
+  "private": true,
+  "packageManager": "pnpm@10.18.3",
+  "scripts": {
+    "dev": "pnpm --filter storefront dev",
+    "dev:studio": "pnpm --filter studio dev",
+    "build": "pnpm --filter studio build && pnpm --filter storefront build",
+    "build:storefront": "pnpm --filter storefront build",
+    "build:studio": "pnpm --filter studio build",
+    "lint": "pnpm --filter storefront lint && pnpm --filter studio lint",
+    "typecheck": "pnpm --filter storefront typecheck && pnpm --filter studio typecheck",
+    "seed": "pnpm --filter studio seed",
+    "studio:deploy": "pnpm --filter studio deploy"
+  }
+}

@@ -1,0 +1,14 @@
+node_modules
+.pnpm-store
+.next
+out
+dist
+build
+.sanity
+.env
+.env.local
+.env.*.local
+*.log
+*.tsbuildinfo
+.DS_Store
+.wrangler
