@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import {ArrowLeft, Images, ShoppingBag} from "lucide-react";
-import {DemoNotice} from "@/components/DemoNotice";
 import {ProductCard} from "@/components/ProductCard";
 import {imageAlt, imageUrl} from "@/lib/sanity";
 import {getFeaturedProducts, getGalleryImages, getSiteSettings} from "@/lib/queries";
@@ -18,11 +17,10 @@ export default async function HomePage() {
     <div>
       <section className="container grid gap-10 pb-14 pt-8 md:grid-cols-[0.9fr_1.1fr] md:items-end md:pb-24 md:pt-16">
         <div className="space-y-7">
-          <DemoNotice enabled={settings.demoMode ?? true} />
-          <p className="section-label">Fashion catalog demo</p>
-          <h1 className="editorial-title">גלריה וקטלוג לבוטיקים שרוצים להיראות כמו חנות אמיתית ברשת.</h1>
+          <p className="section-label">קולקציה נבחרת</p>
+          <h1 className="editorial-title">גלריה וקטלוג לפריטים שאפשר לראות, לשמור ולברר בקלות.</h1>
           <p className="max-w-xl text-lg leading-8 text-[var(--muted)]">
-            חוויה סטטית, מהירה ונקייה ללקוחות שמגיעים מהאינסטגרם: תמונות גדולות, קטלוג מסודר, ודפי פריט עם פנייה בוואטסאפ.
+            תמונות גדולות, קטלוג מסודר ודפי פריט נקיים עוזרים לבחור את הלוק הבא בלי עומס מיותר.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link className="tap inline-flex items-center gap-2 bg-[var(--ink)] px-5 text-sm font-bold text-white" href="/catalog">
@@ -74,7 +72,7 @@ export default async function HomePage() {
           </div>
           <div>
             <p className="section-label mb-3">03</p>
-            <h2 className="text-2xl font-light">ניהול תוכן אמיתי ב-Sanity</h2>
+            <h2 className="text-2xl font-light">פנייה מהירה לבירור זמינות</h2>
           </div>
         </div>
       </section>

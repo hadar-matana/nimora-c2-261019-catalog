@@ -6,9 +6,11 @@ import type {Product} from "@/types/content";
 
 export function ProductCard({product, showPrice}: {product: Product; showPrice: boolean}) {
   const mainImage = product.images?.[0];
+  const price = showPrice && product.priceAgorot ? formatPrice(product.priceAgorot, product.currency) : undefined;
+  const linkLabel = [product.name, product.category?.name, price].filter(Boolean).join(", ");
 
   return (
-    <Link href={`/products/${product.slug}`} className="group block">
+    <Link href={`/products/${product.slug}`} className="group block" aria-label={linkLabel}>
       <article className="space-y-4">
         <div className="relative aspect-[4/5] overflow-hidden bg-[var(--warm)]">
           {mainImage ? (
@@ -30,8 +32,8 @@ export function ProductCard({product, showPrice}: {product: Product; showPrice: 
             <h2 className="text-lg font-semibold leading-snug">{product.name}</h2>
             <p className="mt-1 text-sm text-[var(--muted)]">{product.category?.name}</p>
           </div>
-          {showPrice && product.priceAgorot ? (
-            <p className="shrink-0 text-sm font-bold">{formatPrice(product.priceAgorot, product.currency)}</p>
+          {price ? (
+            <p className="shrink-0 text-sm font-bold">{price}</p>
           ) : null}
         </div>
       </article>

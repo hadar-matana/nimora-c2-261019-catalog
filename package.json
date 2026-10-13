@@ -11,6 +11,6 @@
     "lint": "pnpm --filter storefront lint && pnpm --filter studio lint",
     "typecheck": "pnpm --filter storefront typecheck && pnpm --filter studio typecheck",
     "seed": "pnpm --filter studio seed",
-    "studio:deploy": "pnpm --filter studio deploy"
+    "studio:deploy": "pnpm --filter studio run deploy"
   }
 }

@@ -22,7 +22,7 @@ export default async function CatalogPage() {
           <p className="section-label">קטלוג</p>
           <h1 className="text-5xl font-light leading-tight md:text-7xl">כל הפריטים במקום אחד, בלי עומס של חנות אונליין.</h1>
         </div>
-        <p className="max-w-sm text-[var(--muted)]">חיפוש וסינון רצים בדפדפן על תוכן שפורסם מ-Sanity בזמן הבילד.</p>
+        <p className="max-w-sm text-[var(--muted)]">אפשר לסנן לפי קטגוריה וקולקציה, לחפש לפי שם פריט ולפתוח כל פריט לפרטים נוספים.</p>
       </div>
       <CatalogClient
         products={products}

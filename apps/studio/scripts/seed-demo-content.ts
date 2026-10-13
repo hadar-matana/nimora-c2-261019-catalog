@@ -1,4 +1,5 @@
 import {getCliClient} from "sanity/cli";
+import {stableArrayKey} from "../lib/arrayKeys";
 
 const client = getCliClient({apiVersion: "2025-02-19"});
 
@@ -81,7 +82,18 @@ const products: DemoProduct[] = [
 const gallery = products.slice(0, 10).map((item, index) => ({
   id: `gallery-look-${index + 1}`,
   title: item.name,
-  caption: index % 2 === 0 ? "צילום השראה מתוך קטלוג ההדגמה." : "תמונה שניתנת לניהול ופרסום דרך Sanity Studio.",
+  caption: [
+    "מראה רך ונקי לשילוב יומיומי.",
+    "שכבות קלילות עם נוכחות שקטה.",
+    "פריט מרכזי ללוק ערב מינימלי.",
+    "גזרה מחויטת שמתאימה לעונות מעבר.",
+    "בסיס נוח לבנייה של כמה לוקים.",
+    "הדפס עדין למראה קייצי ורענן.",
+    "קו מידי נקי עם תחושה אלגנטית.",
+    "חולצה משוחררת ליום עבודה או סוף שבוע.",
+    "סט תואם למראה קליל ומסודר.",
+    "פריט יומיומי שקל לשלב עם קולקציות שונות."
+  ][index],
   image: item.images[0],
   category: item.category,
   collection: item.collections[0],
@@ -116,7 +128,7 @@ function product(
   return {id, name, slug, category, collections, description, priceAgorot, sizes, colors, featured, isNew, sortOrder, images};
 }
 
-async function uploadImage(url: string, alt: string) {
+async function uploadImage(url: string, alt: string, keySource: string) {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`Failed to download ${url}: ${response.status}`);
 
@@ -125,11 +137,20 @@ async function uploadImage(url: string, alt: string) {
     contentType: response.headers.get("content-type") ?? "image/jpeg"
   });
 
-  return {_type: "image", asset: {_type: "reference", _ref: asset._id}, alt};
+  return {
+    _key: stableArrayKey(keySource, "images", 0, {_type: "image", asset: {_ref: asset._id}, alt}),
+    _type: "image",
+    asset: {_type: "reference", _ref: asset._id},
+    alt
+  };
 }
 
-function ref(_ref: string) {
-  return {_type: "reference", _ref};
+function ref(_ref: string, keySource?: string, fieldName?: string, index = 0) {
+  return {
+    ...(keySource && fieldName ? {_key: stableArrayKey(keySource, fieldName, index, {_type: "reference", _ref})} : {}),
+    _type: "reference",
+    _ref
+  };
 }
 
 function slugify(value: string) {
@@ -156,11 +177,11 @@ async function seed() {
     _id: "siteSettings",
     _type: "siteSettings",
     displayName: "גלריית אופנה",
-    description: "דמו קטלוג אופנה לבוטיקים: גלריה, מוצרים וניהול תוכן אמיתי.",
+    description: "קטלוג אופנה להמחשת גלריה, מוצרים ופניות לקוחות. הפריטים והתמונות להמחשה בלבד.",
     accentColor: "#5D654E",
     showPrices: true,
     enableInquiries: true,
-    demoMode: true
+    demoMode: false
   });
 
   for (const item of categories) {
@@ -173,7 +194,7 @@ async function seed() {
 
   for (const item of products) {
     const existing = await client.getDocument<{images?: unknown[]}>(item.id);
-    const images = existing?.images?.length ? existing.images : await Promise.all(item.images.map((demoImage) => uploadImage(demoImage.url, demoImage.alt)));
+    const images = existing?.images?.length ? existing.images : await Promise.all(item.images.map((demoImage, index) => uploadImage(demoImage.url, demoImage.alt, `${item.id}:image:${index}`)));
 
     await client.createOrReplace({
       _id: item.id,
@@ -181,7 +202,7 @@ async function seed() {
       name: item.name,
       slug: {_type: "slug", current: item.slug},
       category: ref(item.category),
-      collections: item.collections.map(ref),
+      collections: item.collections.map((collectionId, index) => ref(collectionId, item.id, "collections", index)),
       description: item.description,
       priceAgorot: item.priceAgorot,
       currency: "ILS",
@@ -196,7 +217,7 @@ async function seed() {
 
   for (const item of gallery) {
     const existing = await client.getDocument<{image?: unknown}>(item.id);
-    const uploadedImage = existing?.image ?? (await uploadImage(item.image.url, item.image.alt));
+    const uploadedImage = existing?.image ?? (await uploadImage(item.image.url, item.image.alt, item.id));
 
     await client.createOrReplace({
       _id: item.id,

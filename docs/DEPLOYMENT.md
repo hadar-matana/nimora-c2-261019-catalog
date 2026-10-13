@@ -33,7 +33,7 @@ pnpm typecheck
 pnpm build
 ```
 
-The storefront is a Next.js static export. The generated public output is:
+The storefront is a Next.js static export. The production build intentionally uses `next build --webpack` because the default Turbopack build path currently fails in this environment. The generated public output is:
 
 ```text
 apps/storefront/out
@@ -91,7 +91,7 @@ The intended publishing flow is:
 3. Cloudflare rebuilds the static storefront.
 4. The new published content appears on the public site.
 
-Configure the Sanity webhook after creating a Cloudflare Pages deploy hook. Trigger only on mutations for:
+Configure the Sanity webhook after creating a Cloudflare Pages deploy hook. Trigger only on non-draft published-document mutations for:
 
 - `product`
 - `galleryImage`
@@ -100,6 +100,8 @@ Configure the Sanity webhook after creating a Cloudflare Pages deploy hook. Trig
 - `siteSettings`
 
 Filter out draft-only edits where possible so ordinary draft typing does not rebuild the site.
+
+The deploy hook URL is secret operational configuration. Store it only in the Sanity webhook configuration or password manager; never commit it to the repository.
 
 ## Custom Domain Later
 

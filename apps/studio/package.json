@@ -9,7 +9,9 @@
     "deploy": "sanity deploy",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "seed": "sanity exec scripts/seed-demo-content.ts --with-user-token"
+    "seed": "sanity exec scripts/seed-demo-content.ts --with-user-token",
+    "repair:keys": "sanity exec scripts/repair-array-keys.ts --with-user-token",
+    "stabilize:public-content": "sanity exec scripts/stabilize-public-content.ts --with-user-token"
   },
   "dependencies": {
     "react": "^19.3.0",
