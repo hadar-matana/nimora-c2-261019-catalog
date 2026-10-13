@@ -11,29 +11,22 @@ export function ProductCard({product, showPrice}: {product: Product; showPrice: 
 
   return (
     <Link href={`/products/${product.slug}`} className="group block" aria-label={linkLabel}>
-      <article className="space-y-4">
-        <div className="relative aspect-[4/5] overflow-hidden bg-[var(--warm)]">
+      <article>
+        <div className="relative aspect-[3/4] overflow-hidden bg-[var(--warm)]">
           {mainImage ? (
             <Image
-              src={imageUrl(mainImage, 720, 900)}
+              src={imageUrl(mainImage, 820, 1100)}
               alt={imageAlt(mainImage, product.name)}
               fill
-              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 45vw, 92vw"
-              className="object-cover transition duration-500 group-hover:scale-[1.035]"
+              sizes="(min-width: 1180px) 24vw, (min-width: 768px) 32vw, 48vw"
+              className="object-cover transition duration-700 ease-out group-hover:scale-[1.025]"
             />
           ) : null}
-          <div className="absolute inset-x-0 top-0 flex justify-between p-3 text-xs font-bold">
-            {product.isNew ? <span className="bg-white px-2 py-1">חדש</span> : <span />}
-            {product.featured ? <span className="bg-[var(--ink)] px-2 py-1 text-white">נבחר</span> : null}
-          </div>
         </div>
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h2 className="text-lg font-semibold leading-snug">{product.name}</h2>
-            <p className="mt-1 text-sm text-[var(--muted)]">{product.category?.name}</p>
-          </div>
+        <div className="pt-2 text-center md:pt-3">
+          <h2 className="text-base font-normal leading-snug md:text-lg">{product.name}</h2>
           {price ? (
-            <p className="shrink-0 text-sm font-bold">{price}</p>
+            <p className="mt-1 text-sm font-semibold md:text-base">{price}</p>
           ) : null}
         </div>
       </article>

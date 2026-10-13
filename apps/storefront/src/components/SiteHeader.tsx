@@ -1,33 +1,37 @@
 import Link from "next/link";
+import {Instagram} from "lucide-react";
 import {defaultSiteConfig} from "@/config/site";
 import type {SiteSettings} from "@/types/content";
 
 export function SiteHeader({settings}: {settings: SiteSettings}) {
-  const displayName = settings.displayName || defaultSiteConfig.displayName;
+  const displayName = defaultSiteConfig.displayName;
+  const instagramUrl = settings.instagramUrl || defaultSiteConfig.instagramUrl;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[rgba(250,248,245,0.88)] backdrop-blur-xl">
-      <div className="container flex min-h-16 items-center justify-between gap-4">
-        <Link href="/" className="font-bold">
+    <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[rgba(251,250,248,0.92)] backdrop-blur-xl">
+      <div className="container grid min-h-20 grid-cols-[1fr_auto_1fr] items-center gap-4 md:min-h-24">
+        <div className="flex justify-start">
+          {instagramUrl ? (
+            <a
+              href={instagramUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="tap inline-flex items-center justify-center"
+              aria-label="אינסטגרם"
+            >
+              <Instagram size={22} strokeWidth={1.8} />
+            </a>
+          ) : null}
+        </div>
+        <Link href="/" className="atelier-wordmark" aria-label="ATELIER דף הבית">
           {displayName}
         </Link>
-        <nav aria-label="ניווט ראשי" className="flex items-center gap-1 text-sm font-semibold">
-          <Link className="tap hidden items-center px-3 text-[var(--muted)] transition hover:text-[var(--ink)] sm:inline-flex" href="/gallery">
-            גלריה
-          </Link>
-          <Link className="tap hidden items-center px-3 text-[var(--muted)] transition hover:text-[var(--ink)] sm:inline-flex" href="/catalog">
+        <div className="flex justify-end text-sm font-semibold">
+          <Link className="tap inline-flex items-center px-1 text-[var(--ink)]" href="/catalog">
             קטלוג
           </Link>
-        </nav>
+        </div>
       </div>
-      <nav aria-label="ניווט מובייל" className="container flex border-t border-[var(--border)] sm:hidden">
-        <Link className="tap flex flex-1 items-center justify-center text-sm font-bold" href="/gallery">
-          גלריה
-        </Link>
-        <Link className="tap flex flex-1 items-center justify-center border-r border-[var(--border)] text-sm font-bold" href="/catalog">
-          קטלוג
-        </Link>
-      </nav>
     </header>
   );
 }

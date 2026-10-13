@@ -5,16 +5,13 @@ import type {SiteSettings} from "@/types/content";
 
 export function SiteFooter({settings}: {settings: SiteSettings}) {
   return (
-    <footer className="mt-16 border-t border-[var(--border)]">
-      <div className="container grid gap-8 py-10 md:grid-cols-[1fr_auto] md:items-end">
+    <footer className="mt-16 border-t border-[var(--border)] bg-white">
+      <div className="container grid gap-8 py-8 md:grid-cols-[1fr_auto_1fr] md:items-center">
         <div>
-          <p className="text-2xl font-light">{settings.displayName || defaultSiteConfig.displayName}</p>
-          <p className="mt-3 max-w-xl text-[var(--muted)]">
-            {settings.description || defaultSiteConfig.description}
-          </p>
+          <p className="atelier-wordmark text-[2rem] md:text-[2.6rem]">{defaultSiteConfig.displayName}</p>
         </div>
-        <div className="flex flex-wrap gap-3 text-sm font-bold">
-          <Link href="/gallery">גלריה</Link>
+        <p className="text-center text-sm text-[var(--muted)]">אופנה נשית. בכל יום מחדש.</p>
+        <div className="flex flex-wrap justify-start gap-4 text-sm font-semibold md:justify-end">
           <Link href="/catalog">קטלוג</Link>
           {settings.instagramUrl ? (
             <a href={settings.instagramUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1">
@@ -30,6 +27,9 @@ export function SiteFooter({settings}: {settings: SiteSettings}) {
           ) : null}
         </div>
       </div>
+      {settings.demoMode ? (
+        <p className="container pb-6 text-center text-xs text-[var(--muted)]">הפריטים והתמונות באתר ההדגמה להמחשה בלבד.</p>
+      ) : null}
     </footer>
   );
 }

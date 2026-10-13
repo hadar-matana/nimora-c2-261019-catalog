@@ -1,10 +1,10 @@
 import type {Metadata} from "next";
 import {notFound} from "next/navigation";
 import Link from "next/link";
-import {ArrowLeft} from "lucide-react";
+import {ArrowRight} from "lucide-react";
 import {ProductCard} from "@/components/ProductCard";
 import {ProductGallery} from "@/components/ProductGallery";
-import {ProductInquiryButton} from "@/components/ProductInquiryButton";
+import {ProductInquiryPanel} from "@/components/ProductInquiryPanel";
 import {formatPrice} from "@/lib/format";
 import {getProductBySlug, getProductSlugs, getRelatedProducts, getSiteSettings} from "@/lib/queries";
 
@@ -38,71 +38,40 @@ export default async function ProductPage({params}: ProductPageProps) {
 
   const related = await getRelatedProducts(product._id, product.category?._id, 4);
   const showPrices = settings.showPrices ?? true;
-  const enableInquiries = settings.enableInquiries ?? true;
+  const context = [product.category?.name, ...(product.collections?.map((collection) => collection.name) ?? [])].filter(Boolean).join(" / ");
 
   return (
-    <section className="container py-8 md:py-14">
-      <Link href="/catalog" className="mb-8 inline-flex items-center gap-2 text-sm font-bold text-[var(--muted)]">
-        <ArrowLeft size={18} />
+    <section className="container py-5 md:py-10">
+      <Link href="/catalog" className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-[var(--muted)] md:mb-8">
+        <ArrowRight size={18} />
         חזרה לקטלוג
       </Link>
 
-      <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1.14fr)_minmax(360px,0.86fr)] lg:gap-16">
         <ProductGallery images={product.images} productName={product.name} />
 
         <div className="lg:sticky lg:top-28 lg:self-start">
-          <div className="border-b border-[var(--border)] pb-8">
-            <p className="section-label mb-4">{product.category?.name ?? "פריט"}</p>
-            <h1 className="text-5xl font-light leading-tight md:text-7xl">{product.name}</h1>
+          <div className="border-b border-[var(--border)] pb-7">
+            {context ? <p className="mb-4 text-sm text-[var(--muted)]">{context}</p> : null}
+            <h1 className="text-3xl font-normal leading-tight md:text-5xl">{product.name}</h1>
             {showPrices && product.priceAgorot ? (
-              <p className="mt-5 text-2xl font-semibold">{formatPrice(product.priceAgorot, product.currency)}</p>
+              <p className="mt-4 text-xl font-semibold md:text-2xl">{formatPrice(product.priceAgorot, product.currency)}</p>
             ) : null}
             {product.description ? <p className="mt-6 text-lg leading-8 text-[var(--muted)]">{product.description}</p> : null}
           </div>
 
-          <div className="grid gap-6 border-b border-[var(--border)] py-8 sm:grid-cols-2">
-            {product.sizes?.length ? (
-              <div>
-                <h2 className="mb-3 text-sm font-bold">מידות</h2>
-                <div className="flex flex-wrap gap-2">
-                  {product.sizes.map((size) => (
-                    <span className="border border-[var(--border)] bg-white px-3 py-2 text-sm" key={size}>
-                      {size}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-            {product.colors?.length ? (
-              <div>
-                <h2 className="mb-3 text-sm font-bold">צבעים</h2>
-                <div className="flex flex-wrap gap-2">
-                  {product.colors.map((color) => (
-                    <span className="border border-[var(--border)] bg-white px-3 py-2 text-sm" key={color}>
-                      {color}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-          </div>
-
-          {enableInquiries ? (
-            <div className="py-8">
-              <ProductInquiryButton product={product} settings={settings} />
-            </div>
-          ) : null}
+          <ProductInquiryPanel product={product} settings={settings} showPrice={showPrices} />
         </div>
       </div>
 
       {related.length ? (
-        <section className="mt-20 space-y-8 md:mt-28">
+        <section className="mt-18 space-y-8 md:mt-28">
           <div className="flex items-end justify-between gap-4">
             <div>
               <p className="section-label mb-3">עוד באותו סגנון</p>
-              <h2 className="text-4xl font-light">פריטים קשורים</h2>
+              <h2 className="text-3xl font-normal">פריטים קשורים</h2>
             </div>
-            <Link href="/catalog" className="text-sm font-bold text-[var(--olive)]">
+            <Link href="/catalog" className="text-sm font-semibold underline underline-offset-4">
               לקטלוג
             </Link>
           </div>

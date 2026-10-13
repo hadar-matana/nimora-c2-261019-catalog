@@ -1,16 +1,14 @@
-@import url("https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
 :root {
-  --background: #faf8f5;
+  --background: #fbfaf8;
   --surface: #ffffff;
-  --ink: #262320;
-  --muted: #7c756e;
-  --border: #e8e2dc;
-  --warm: #d7c6b3;
-  --olive: #5d654e;
-  --clay: #a26856;
-  --charcoal: #171412;
+  --ink: #151515;
+  --muted: #6f6b66;
+  --border: #e8e4df;
+  --warm: #ece8e1;
+  --stone: #c8c0b6;
+  --charcoal: #0f0f0f;
   --radius: 8px;
 }
 
@@ -28,20 +26,8 @@ body {
   margin: 0;
   background: var(--background);
   color: var(--ink);
-  font-family: "Assistant", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: Arial, "Helvetica Neue", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   text-rendering: optimizeLegibility;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(38, 35, 32, 0.035) 1px, transparent 1px) 0 0 / 84px 84px,
-    linear-gradient(180deg, rgba(38, 35, 32, 0.028) 1px, transparent 1px) 0 0 / 84px 84px;
-  mask-image: linear-gradient(to bottom, black, transparent 75%);
 }
 
 a {
@@ -61,16 +47,16 @@ select {
 }
 
 :focus-visible {
-  outline: 2px solid var(--olive);
+  outline: 2px solid var(--ink);
   outline-offset: 3px;
 }
 
 ::selection {
-  background: var(--warm);
+  background: var(--stone);
 }
 
 .container {
-  width: min(1180px, calc(100% - 32px));
+  width: min(1360px, calc(100% - 32px));
   margin-inline: auto;
 }
 
@@ -86,6 +72,15 @@ select {
   text-transform: uppercase;
 }
 
+.atelier-wordmark {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 4vw, 3.8rem);
+  font-weight: 500;
+  line-height: 1;
+  direction: ltr;
+  letter-spacing: 0;
+}
+
 .editorial-title {
   font-size: clamp(2.25rem, 7vw, 6.9rem);
   line-height: 0.94;
@@ -95,13 +90,35 @@ select {
 
 .balanced-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 14px;
 }
 
 .tap {
   min-height: 44px;
   min-width: 44px;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .balanced-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px 20px;
+  }
+}
+
+@media (min-width: 1180px) {
+  .balanced-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 34px 22px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
