@@ -76,8 +76,8 @@ export default async function ProductPage({params}: ProductPageProps) {
             </Link>
           </div>
           <div className="balanced-grid">
-            {related.map((item) => (
-              <ProductCard product={item} key={item._id} showPrice={showPrices} />
+            {related.map((item, index) => (
+              <ProductCard product={item} index={index} key={item._id} showPrice={showPrices} />
             ))}
           </div>
         </section>

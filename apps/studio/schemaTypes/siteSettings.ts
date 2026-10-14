@@ -9,7 +9,7 @@ export const siteSettings = defineType({
       name: "displayName",
       title: "שם תצוגה",
       type: "string",
-      initialValue: "גלריית אופנה",
+      initialValue: "ATELIER",
       validation: (Rule) => Rule.required()
     }),
     defineField({
@@ -33,14 +33,33 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: "instagramUrl",
-      title: "קישור אינסטגרם",
-      type: "url"
+      title: "אינסטגרם",
+      description: "שם משתמש כמו atelier.studio או קישור מלא לפרופיל, למשל https://www.instagram.com/atelier.studio/",
+      type: "string",
+      validation: (Rule) =>
+        Rule.custom((value) => {
+          if (!value) return true;
+          const trimmed = value.trim();
+          if (/^@?[a-zA-Z0-9._]{1,30}$/.test(trimmed)) return true;
+          try {
+            const url = new URL(trimmed);
+            return /(^|\.)instagram\.com$/i.test(url.hostname) || "יש להזין שם משתמש באינסטגרם או קישור לפרופיל אינסטגרם.";
+          } catch {
+            return "יש להזין שם משתמש באינסטגרם או קישור לפרופיל אינסטגרם.";
+          }
+        })
     }),
     defineField({
       name: "whatsappNumber",
       title: "מספר WhatsApp",
-      description: "בפורמט בינלאומי, לדוגמה 972501234567",
-      type: "string"
+      description: "מספר עסקי בפורמט בינלאומי. אפשר להזין לדוגמה 972501234567 או ‎+972 50 123 4567.",
+      type: "string",
+      validation: (Rule) =>
+        Rule.custom((value) => {
+          if (!value) return true;
+          const digits = value.replace(/[^\d]/g, "");
+          return (digits.length >= 8 && digits.length <= 15) || "יש להזין מספר WhatsApp תקין בפורמט בינלאומי.";
+        })
     }),
     defineField({
       name: "contactEmail",

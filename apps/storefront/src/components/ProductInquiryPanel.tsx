@@ -3,8 +3,7 @@
 import {useMemo, useRef, useState} from "react";
 import type {RefObject} from "react";
 import {MessageCircle} from "lucide-react";
-import {defaultSiteConfig} from "@/config/site";
-import {formatPrice} from "@/lib/format";
+import {createProductWhatsappHref, getContactLinks} from "@/lib/contact";
 import type {Product, SiteSettings} from "@/types/content";
 
 type MissingField = "size" | "color" | null;
@@ -25,10 +24,8 @@ export function ProductInquiryPanel({
   const [missingField, setMissingField] = useState<MissingField>(null);
   const sizeRef = useRef<HTMLDivElement>(null);
   const colorRef = useRef<HTMLDivElement>(null);
-  const whatsappNumber = settings.whatsappNumber?.replace(/[^\d]/g, "");
-  const inquiriesEnabled = settings.enableInquiries ?? defaultSiteConfig.enableInquiries;
-  const canInquire = inquiriesEnabled && Boolean(whatsappNumber && whatsappNumber.length >= 8);
-  const price = showPrice && product.priceAgorot ? formatPrice(product.priceAgorot, product.currency) : "";
+  const {whatsappNumber} = getContactLinks(settings);
+  const canInquire = Boolean(whatsappNumber);
 
   const productPath = useMemo(() => `/products/${product.slug}/`, [product.slug]);
 
@@ -57,22 +54,21 @@ export function ProductInquiryPanel({
     const productUrl =
       typeof window !== "undefined"
         ? new URL(productPath, window.location.origin).toString()
-        : `${defaultSiteConfig.baseUrl}${productPath}`;
-    const messageLines = [
-      `היי! אשמח לברר לגבי ${product.name}.`,
-      selectedSize ? `מידה: ${selectedSize}` : "",
-      selectedColor ? `צבע: ${selectedColor}` : "",
-      price ? `מחיר: ${price}` : "",
-      `קישור למוצר: ${productUrl}`,
-      "האם הפריט זמין?"
-    ].filter(Boolean);
-    const href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(messageLines.join("\n"))}`;
+        : productPath;
+    const href = createProductWhatsappHref({
+      number: whatsappNumber,
+      product,
+      selectedSize,
+      selectedColor,
+      showPrice,
+      productUrl
+    });
 
     window.open(href, "_blank", "noopener,noreferrer");
   }
 
   return (
-    <div className={canInquire ? "pb-24 md:pb-0" : undefined}>
+    <div className={canInquire ? "pb-28 md:pb-0" : undefined}>
       <div className="grid gap-6 border-b border-[var(--border)] py-7">
         {sizes.length ? (
           <OptionGroup
@@ -108,7 +104,7 @@ export function ProductInquiryPanel({
           <div className="hidden py-8 md:block">
             <InquiryButton onClick={handleInquiry} />
           </div>
-          <div className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[rgba(251,250,248,0.94)] p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] backdrop-blur md:hidden">
+          <div className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[rgba(251,250,248,0.94)] p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-[0_-10px_30px_rgba(15,15,15,0.06)] backdrop-blur md:hidden">
             <InquiryButton onClick={handleInquiry} />
           </div>
         </>
@@ -154,7 +150,7 @@ function OptionGroup({
     <div ref={containerRef}>
       <div className="mb-3 flex items-center gap-2">
         <h2 className="text-base font-normal">{label}:</h2>
-        {missing ? <p className="text-sm font-semibold text-[var(--ink)]">בחרי {label} כדי להמשיך</p> : null}
+        {missing ? <p className="field-warning text-sm font-semibold text-[var(--ink)]">בחרי {label} כדי להמשיך</p> : null}
       </div>
       <div className="flex flex-wrap gap-2">
         {options.map((option) => {
@@ -164,8 +160,8 @@ function OptionGroup({
           return (
             <button
               type="button"
-              className={`tap inline-flex items-center justify-center border bg-white px-4 text-sm transition ${
-                isSelected ? "border-[var(--ink)] shadow-[inset_0_0_0_1px_var(--ink)]" : "border-[var(--border)] hover:border-[var(--stone)]"
+              className={`tap option-button inline-flex items-center justify-center border bg-white px-4 text-sm transition ${
+                isSelected ? "is-selected border-[var(--ink)] shadow-[inset_0_0_0_1px_var(--ink)]" : "border-[var(--border)] hover:border-[var(--stone)]"
               } ${swatches ? "gap-2 rounded-full pl-4 pr-2" : "min-w-12 rounded"}`}
               onClick={() => onSelect(option)}
               aria-pressed={isSelected}
@@ -191,7 +187,7 @@ function InquiryButton({onClick}: {onClick: () => void}) {
   return (
     <button
       type="button"
-      className="tap inline-flex w-full items-center justify-center gap-2 rounded bg-[var(--charcoal)] px-5 text-sm font-semibold text-white transition hover:bg-black md:w-auto md:min-w-72"
+      className="tap cta-button inline-flex w-full items-center justify-center gap-2 rounded bg-[var(--charcoal)] px-5 text-sm font-semibold text-white transition md:w-auto md:min-w-72"
       onClick={onClick}
     >
       <MessageCircle size={19} />

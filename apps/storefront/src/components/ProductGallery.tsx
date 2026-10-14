@@ -11,6 +11,7 @@ export function ProductGallery({images, productName}: {images: SanityImage[]; pr
   const touchStart = useRef<number | null>(null);
   const pointerStart = useRef<number | null>(null);
   const mouseStart = useRef<number | null>(null);
+  const lastSwipeAt = useRef(0);
   const active = images[activeIndex] ?? images[0];
   const hasMultipleImages = images.length > 1;
 
@@ -27,6 +28,9 @@ export function ProductGallery({images, productName}: {images: SanityImage[]; pr
 
   function handleSwipeDistance(distance: number) {
     if (Math.abs(distance) < 36) return;
+    const now = Date.now();
+    if (now - lastSwipeAt.current < 90) return;
+    lastSwipeAt.current = now;
 
     if (distance > 0) {
       showPrevious();
@@ -67,11 +71,12 @@ export function ProductGallery({images, productName}: {images: SanityImage[]; pr
       >
         {active ? (
           <Image
+            key={activeIndex}
             src={imageUrl(active, 1200, 1500)}
             alt={imageAlt(active, productName)}
             fill
             sizes="(min-width: 1024px) 56vw, 100vw"
-            className="object-cover"
+            className="gallery-active-image object-cover"
             priority
           />
         ) : null}
@@ -110,7 +115,7 @@ export function ProductGallery({images, productName}: {images: SanityImage[]; pr
             {images.map((image, index) => (
               <button
                 type="button"
-                className={`h-2 w-2 rounded-full ${index === activeIndex ? "bg-[var(--ink)]" : "bg-[var(--stone)]"}`}
+                className={`gallery-dot h-2 w-2 rounded-full ${index === activeIndex ? "is-selected bg-[var(--ink)]" : "bg-[var(--stone)]"}`}
                 key={image._key ?? image.asset?._id ?? index}
                 onClick={() => setActiveIndex(index)}
                 aria-label={`הצג תמונה ${index + 1}`}
@@ -119,19 +124,19 @@ export function ProductGallery({images, productName}: {images: SanityImage[]; pr
             ))}
           </div>
           <div className="hidden grid-cols-5 gap-3 md:grid">
-          {images.map((image, index) => (
-            <button
-              type="button"
-              className={`relative aspect-[3/4] overflow-hidden border bg-[var(--warm)] ${
-                index === activeIndex ? "border-[var(--ink)]" : "border-transparent"
-              }`}
-              key={image._key ?? image.asset?._id ?? index}
-              onClick={() => setActiveIndex(index)}
-              aria-label={`הצג תמונה ${index + 1}`}
-            >
-              <Image src={imageUrl(image, 300, 400)} alt="" fill sizes="120px" className="object-cover" />
-            </button>
-          ))}
+            {images.map((image, index) => (
+              <button
+                type="button"
+                className={`gallery-thumb relative aspect-[3/4] overflow-hidden border bg-[var(--warm)] ${
+                  index === activeIndex ? "border-[var(--ink)]" : "border-transparent"
+                }`}
+                key={image._key ?? image.asset?._id ?? index}
+                onClick={() => setActiveIndex(index)}
+                aria-label={`הצג תמונה ${index + 1}`}
+              >
+                <Image src={imageUrl(image, 300, 400)} alt="" fill sizes="120px" className="object-cover" />
+              </button>
+            ))}
           </div>
         </>
       ) : null}

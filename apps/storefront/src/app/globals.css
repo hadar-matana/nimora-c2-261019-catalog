@@ -10,6 +10,9 @@
   --stone: #c8c0b6;
   --charcoal: #0f0f0f;
   --radius: 8px;
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-fast: 180ms;
+  --motion-medium: 320ms;
 }
 
 * {
@@ -99,6 +102,91 @@ select {
   min-width: 44px;
 }
 
+.contact-icon,
+.nav-link,
+.option-button,
+.cta-button,
+.gallery-thumb,
+.gallery-dot {
+  transition-duration: var(--motion-fast);
+  transition-property: background-color, border-color, box-shadow, color, opacity, transform;
+  transition-timing-function: var(--ease-editorial);
+}
+
+.contact-icon:hover,
+.nav-link:hover {
+  opacity: 0.65;
+  transform: translateY(-1px);
+}
+
+.contact-icon:active,
+.nav-link:active,
+.option-button:active,
+.cta-button:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+.filter-button {
+  transition-duration: var(--motion-fast);
+  transition-property: color, opacity;
+  transition-timing-function: var(--ease-editorial);
+}
+
+.filter-indicator {
+  opacity: 0;
+  transform: scaleX(0.35);
+  transition: opacity var(--motion-fast) var(--ease-editorial), transform var(--motion-medium) var(--ease-editorial);
+}
+
+.filter-button.is-selected .filter-indicator {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.catalog-card {
+  animation: catalog-card-enter 420ms var(--ease-editorial) both;
+  transform-origin: 50% 70%;
+}
+
+.catalog-card:active {
+  transform: scale(0.992);
+}
+
+.product-card-image {
+  will-change: transform, opacity;
+}
+
+.gallery-active-image {
+  animation: gallery-image-reveal 320ms var(--ease-editorial) both;
+}
+
+.gallery-thumb:hover {
+  transform: translateY(-1px);
+}
+
+.gallery-dot {
+  transform: scale(0.82);
+}
+
+.gallery-dot.is-selected {
+  transform: scale(1);
+}
+
+.option-button:hover,
+.option-button.is-selected {
+  transform: translateY(-1px);
+}
+
+.field-warning {
+  animation: field-warning-enter 260ms var(--ease-editorial) both;
+}
+
+.cta-button:hover {
+  background: #000000;
+  box-shadow: 0 10px 24px rgba(15, 15, 15, 0.14);
+  transform: translateY(-1px);
+}
+
 .no-scrollbar {
   scrollbar-width: none;
 }
@@ -129,5 +217,38 @@ select {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes catalog-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gallery-image-reveal {
+  from {
+    opacity: 0.72;
+    transform: scale(1.01);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes field-warning-enter {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

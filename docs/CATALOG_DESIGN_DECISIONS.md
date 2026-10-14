@@ -24,3 +24,11 @@ Product pages keep one primary image visible at a time, with swipe navigation on
 ## WhatsApp Inquiry
 
 The catalog does not implement cart, checkout, inventory reservation, accounts, wishlist, or payments. When a valid WhatsApp number is configured, the CTA validates required size/color choices and opens `wa.me` with a Hebrew message containing the product name, selected options, price, and shareable product URL. If no valid number is configured, the CTA is hidden.
+
+## Contact Configuration
+
+Public contact actions are sourced from the published Sanity Site Settings document, not from React constants or private environment variables. `instagramUrl` accepts either an Instagram username or a full Instagram profile URL. `whatsappNumber` accepts common international formats and is normalized to digits before creating a `wa.me` link. If either field is empty or invalid, that public action is hidden rather than replaced with a placeholder.
+
+## Motion
+
+Motion is intentionally restrained: product cards use a short staggered reveal, product images ease on hover, category indicators animate in place, carousel image changes cross-fade subtly, and option/CTA controls use small press states. The global `prefers-reduced-motion` rule disables these effects for customers who request reduced motion.

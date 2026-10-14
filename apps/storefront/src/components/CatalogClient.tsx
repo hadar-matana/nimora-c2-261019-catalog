@@ -37,9 +37,9 @@ export function CatalogClient({
       </div>
 
       {filteredProducts.length ? (
-        <div className="balanced-grid">
-          {filteredProducts.map((product) => (
-            <ProductCard product={product} showPrice={showPrices} key={product._id} />
+        <div className="balanced-grid" aria-live="polite">
+          {filteredProducts.map((product, index) => (
+            <ProductCard product={product} showPrice={showPrices} index={index} key={product._id} />
           ))}
         </div>
       ) : (
@@ -66,12 +66,12 @@ function CategoryButton({
   return (
     <button
       type="button"
-      className={`tap relative px-1 pb-1 transition ${selected ? "text-[var(--ink)]" : "text-[var(--muted)] hover:text-[var(--ink)]"}`}
+      className={`tap filter-button relative px-1 pb-1 transition ${selected ? "is-selected text-[var(--ink)]" : "text-[var(--muted)] hover:text-[var(--ink)]"}`}
       onClick={onClick}
       aria-pressed={selected}
     >
       {label}
-      {selected ? <span className="absolute inset-x-0 -bottom-[13px] h-px bg-[var(--ink)]" aria-hidden="true" /> : null}
+      <span className="filter-indicator absolute inset-x-0 -bottom-[13px] h-px origin-center bg-[var(--ink)]" aria-hidden="true" />
     </button>
   );
 }
