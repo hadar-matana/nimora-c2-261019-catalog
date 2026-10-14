@@ -60,7 +60,7 @@ export default async function ProductPage({params}: ProductPageProps) {
             {product.description ? <p className="mt-6 text-lg leading-8 text-[var(--muted)]">{product.description}</p> : null}
           </div>
 
-          <ProductInquiryPanel product={product} settings={settings} showPrice={showPrices} />
+          <ProductInquiryPanel product={product} settings={settings} />
         </div>
       </div>
 

@@ -62,17 +62,15 @@ export function createProductWhatsappHref({
   product,
   selectedSize,
   selectedColor,
-  showPrice,
   productUrl
 }: {
   number: string;
   product: Product;
   selectedSize?: string;
   selectedColor?: string;
-  showPrice: boolean;
   productUrl: string;
 }) {
-  const price = showPrice && product.priceAgorot ? formatPrice(product.priceAgorot, product.currency) : "";
+  const price = product.priceAgorot ? formatPrice(product.priceAgorot, product.currency) : "";
 
   return createWhatsappHref(number, [
     `היי! אשמח לברר לגבי ${product.name}.`,

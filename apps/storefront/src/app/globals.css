@@ -177,10 +177,6 @@ select {
   transform: translateY(-1px);
 }
 
-.field-warning {
-  animation: field-warning-enter 260ms var(--ease-editorial) both;
-}
-
 .cta-button:hover {
   background: #000000;
   box-shadow: 0 10px 24px rgba(15, 15, 15, 0.14);
@@ -242,13 +238,3 @@ select {
   }
 }
 
-@keyframes field-warning-enter {
-  from {
-    opacity: 0;
-    transform: translateY(3px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}

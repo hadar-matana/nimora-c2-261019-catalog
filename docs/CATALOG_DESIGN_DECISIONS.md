@@ -23,7 +23,7 @@ Product pages keep one primary image visible at a time, with swipe navigation on
 
 ## WhatsApp Inquiry
 
-The catalog does not implement cart, checkout, inventory reservation, accounts, wishlist, or payments. When a valid WhatsApp number is configured, the CTA validates required size/color choices and opens `wa.me` with a Hebrew message containing the product name, selected options, price, and shareable product URL. If no valid number is configured, the CTA is hidden.
+The catalog does not implement cart, checkout, inventory reservation, accounts, wishlist, or payments. When a valid WhatsApp number is configured, the CTA opens `wa.me` immediately with a Hebrew message containing the product name, price when available, shareable product URL, and any size/color choices the shopper selected. Size and color are optional inquiry context, not required checkout fields. If no valid number is configured, the CTA is hidden.
 
 ## Contact Configuration
 

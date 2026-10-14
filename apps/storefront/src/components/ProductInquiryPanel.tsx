@@ -1,54 +1,27 @@
 "use client";
 
-import {useMemo, useRef, useState} from "react";
-import type {RefObject} from "react";
+import {useMemo, useState} from "react";
 import {MessageCircle} from "lucide-react";
 import {createProductWhatsappHref, getContactLinks} from "@/lib/contact";
 import type {Product, SiteSettings} from "@/types/content";
 
-type MissingField = "size" | "color" | null;
-
 export function ProductInquiryPanel({
   product,
-  settings,
-  showPrice
+  settings
 }: {
   product: Product;
   settings: SiteSettings;
-  showPrice: boolean;
 }) {
   const sizes = product.sizes?.filter(Boolean) ?? [];
   const colors = product.colors?.filter(Boolean) ?? [];
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
-  const [missingField, setMissingField] = useState<MissingField>(null);
-  const sizeRef = useRef<HTMLDivElement>(null);
-  const colorRef = useRef<HTMLDivElement>(null);
   const {whatsappNumber} = getContactLinks(settings);
   const canInquire = Boolean(whatsappNumber);
 
   const productPath = useMemo(() => `/products/${product.slug}/`, [product.slug]);
 
-  function focusMissing(field: MissingField) {
-    const target = field === "size" ? sizeRef.current : colorRef.current;
-    target?.scrollIntoView({behavior: "smooth", block: "center"});
-    const button = target?.querySelector("button");
-    button?.focus({preventScroll: true});
-  }
-
   function handleInquiry() {
-    if (sizes.length && !selectedSize) {
-      setMissingField("size");
-      focusMissing("size");
-      return;
-    }
-
-    if (colors.length && !selectedColor) {
-      setMissingField("color");
-      focusMissing("color");
-      return;
-    }
-
     if (!whatsappNumber) return;
 
     const productUrl =
@@ -60,7 +33,6 @@ export function ProductInquiryPanel({
       product,
       selectedSize,
       selectedColor,
-      showPrice,
       productUrl
     });
 
@@ -72,28 +44,18 @@ export function ProductInquiryPanel({
       <div className="grid gap-6 border-b border-[var(--border)] py-7">
         {sizes.length ? (
           <OptionGroup
-            containerRef={sizeRef}
             label="מידה"
             options={sizes}
             selected={selectedSize}
-            missing={missingField === "size"}
-            onSelect={(value) => {
-              setSelectedSize(value);
-              setMissingField(null);
-            }}
+            onSelect={setSelectedSize}
           />
         ) : null}
         {colors.length ? (
           <OptionGroup
-            containerRef={colorRef}
             label="צבע"
             options={colors}
             selected={selectedColor}
-            missing={missingField === "color"}
-            onSelect={(value) => {
-              setSelectedColor(value);
-              setMissingField(null);
-            }}
+            onSelect={setSelectedColor}
             swatches
           />
         ) : null}
@@ -133,24 +95,19 @@ function OptionGroup({
   label,
   options,
   selected,
-  missing,
   onSelect,
-  swatches,
-  containerRef
+  swatches
 }: {
   label: string;
   options: string[];
   selected: string;
-  missing: boolean;
   onSelect: (value: string) => void;
   swatches?: boolean;
-  containerRef?: RefObject<HTMLDivElement | null>;
 }) {
   return (
-    <div ref={containerRef}>
+    <div>
       <div className="mb-3 flex items-center gap-2">
         <h2 className="text-base font-normal">{label}:</h2>
-        {missing ? <p className="field-warning text-sm font-semibold text-[var(--ink)]">בחרי {label} כדי להמשיך</p> : null}
       </div>
       <div className="flex flex-wrap gap-2">
         {options.map((option) => {
@@ -163,6 +120,7 @@ function OptionGroup({
               className={`tap option-button inline-flex items-center justify-center border bg-white px-4 text-sm transition ${
                 isSelected ? "is-selected border-[var(--ink)] shadow-[inset_0_0_0_1px_var(--ink)]" : "border-[var(--border)] hover:border-[var(--stone)]"
               } ${swatches ? "gap-2 rounded-full pl-4 pr-2" : "min-w-12 rounded"}`}
+              onPointerDown={() => onSelect(option)}
               onClick={() => onSelect(option)}
               aria-pressed={isSelected}
               key={option}

@@ -11,7 +11,6 @@ export function ProductInquiryButton({product, settings}: {product: Product; set
     ? createProductWhatsappHref({
         number: whatsappNumber,
         product,
-        showPrice: true,
         productUrl:
           typeof window !== "undefined"
             ? new URL(`/products/${product.slug}/`, window.location.origin).toString()
