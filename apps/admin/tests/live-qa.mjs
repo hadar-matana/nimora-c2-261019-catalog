@@ -1,3 +1,4 @@
+import "../scripts/legacy-demo-only.mjs";
 // Explicitly authorized, single-product QA only. Never run the fixture suites
 // against this server. No token, deploy-hook URL or session is written to reports.
 import assert from "node:assert/strict";

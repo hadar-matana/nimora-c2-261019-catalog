@@ -218,7 +218,7 @@ try {
   check((await page.locator(".image-tile").count()) === 1, "Remove image");
   await page
     .locator("input[type=file]")
-    .setInputFiles(path.join(root, "apps/admin/public/demo/blazer.png"));
+    .setInputFiles({name: "blazer.png", mimeType: "image/png", buffer: await sharp(path.join(root, "apps/admin/public/demo/blazer.png")).resize(800).png().toBuffer()});
   await page.locator(".image-tile").nth(1).waitFor();
   await page.locator("#product-description").fill("תיאור לבדיקה לפני פרסום");
   await button(page, "תצוגה מקדימה").click();

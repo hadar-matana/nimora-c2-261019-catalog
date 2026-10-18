@@ -1,3 +1,4 @@
+import "./legacy-demo-only.mjs";
 // Bounded retest: GET-only content audit, no product/category mutation helpers.
 import assert from 'node:assert/strict';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';

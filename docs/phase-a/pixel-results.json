@@ -1,0 +1,44 @@
+[
+  {
+    "file": "about-1512-approved.png",
+    "width": 1512,
+    "height": 980,
+    "differentPixels": 0,
+    "totalPixels": 1481760
+  },
+  {
+    "file": "about-390-approved.png",
+    "width": 390,
+    "height": 980,
+    "differentPixels": 0,
+    "totalPixels": 382200
+  },
+  {
+    "file": "home-1512-approved.png",
+    "width": 1512,
+    "height": 2443,
+    "differentPixels": 0,
+    "totalPixels": 3693816
+  },
+  {
+    "file": "home-390-approved.png",
+    "width": 390,
+    "height": 2604,
+    "differentPixels": 0,
+    "totalPixels": 1015560
+  },
+  {
+    "file": "product-1512-approved.png",
+    "width": 1512,
+    "height": 1930,
+    "differentPixels": 0,
+    "totalPixels": 2918160
+  },
+  {
+    "file": "product-390-approved.png",
+    "width": 390,
+    "height": 2248,
+    "differentPixels": 0,
+    "totalPixels": 876720
+  }
+]

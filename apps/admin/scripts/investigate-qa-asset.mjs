@@ -1,3 +1,4 @@
+import "./legacy-demo-only.mjs";
 // Read-only history investigation: one existing QA asset, no mutation endpoint.
 import {readFile,writeFile} from 'node:fs/promises';
 import {homedir} from 'node:os';

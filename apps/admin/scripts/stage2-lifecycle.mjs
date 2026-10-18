@@ -1,3 +1,4 @@
+import "./legacy-demo-only.mjs";
 // Every mutation is bounded to the retained QA identity; no automatic retries.
 import assert from 'node:assert/strict';
 import {readFile,unlink} from 'node:fs/promises';

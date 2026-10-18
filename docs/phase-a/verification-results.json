@@ -1,0 +1,41 @@
+{
+  "approvedCommit": "e33d95253f249ba401c9affb70716dab0a812f2a",
+  "releaseManifestMatched": 39,
+  "releaseManifestTotal": 39,
+  "lint": "passed: storefront, Studio, admin",
+  "types": "passed: storefront, Studio, admin, Worker",
+  "builds": "passed: storefront, Studio, admin",
+  "configAndBrandRender": "passed",
+  "mockAuthTests": 4,
+  "adminIntegrationGroups": 19,
+  "streaming": "passed using DIRECT_WORKER_VERIFY=1; Wrangler proxy path has known failure",
+  "adminUIAssertions": 71,
+  "adminUIWidths": [
+    375,
+    390,
+    768,
+    1280,
+    1440
+  ],
+  "visualPages": [
+    "home",
+    "about",
+    "product"
+  ],
+  "visualWidths": [
+    390,
+    1512
+  ],
+  "visualDifferentPixels": 0,
+  "productionWrites": 0,
+  "deployments": 0,
+  "cleanCheckout": {
+    "sourceCommit": "808e545",
+    "frozenInstall": "passed: 1104 packages, pnpm 10.18.3, separate temporary store, 3m33s",
+    "adminBuild": "passed",
+    "workerTypes": "passed",
+    "configBrandContractsAuth": "passed",
+    "productionCredentialsRequired": false,
+    "serverSecretSentinelInBrowser": false
+  }
+}

@@ -1,3 +1,4 @@
+import "./legacy-demo-only.mjs";
 // Run manually in a private local terminal. Secrets stay in memory and are sent
 // directly to the existing private Worker; no values are printed or saved.
 import assert from "node:assert/strict";

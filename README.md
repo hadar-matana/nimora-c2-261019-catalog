@@ -83,3 +83,7 @@ Current admin handoff: [local real-data integration, preview instructions, test 
 [Stage 1 deployment progress](docs/ADMIN_STAGE1_DEPLOYMENT.md): the approved private Worker/SQLite migration succeeded on Free. Public activation and remote tests await [private owner/read-token provisioning](docs/ADMIN_STAGE1_PROVISIONING.md). Stage 2 writes remain disabled.
 
 [Remote Stage 1 verification](docs/ADMIN_STAGE1_REMOTE_VERIFICATION.md): authenticated read-only admin is available at https://atelier-admin.hadarmat.workers.dev/login/. Remote auth/session/security, real catalog reads and Chrome desktop/mobile checks passed; actual Free-tier CPU/memory/usage evidence is recorded. Stage 2 mutations/uploads remain disabled pending separate approval.
+
+## Client configuration (Phase A)
+
+See [Phase A configuration](docs/PHASE_A_CONFIGURATION.md) for required public build variables, server-only Worker secrets, explicit demo examples, client branding and clean-checkout verification. Deployments must explicitly select their CMS target; missing configuration fails closed. Phase A is local-only.

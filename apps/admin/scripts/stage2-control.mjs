@@ -1,3 +1,4 @@
+import "./legacy-demo-only.mjs";
 // Controlled QA only. Never prints credentials or raw service error bodies.
 import assert from 'node:assert/strict';
 import {readFile,writeFile} from 'node:fs/promises';

@@ -1,3 +1,4 @@
+import "./legacy-demo-only.mjs";
 // Interactive acceptance test: existing owner credentials, hidden input,
 // no password persistence and no Sanity mutation/upload requests upstream.
 import { hidden } from "./private-input.mjs";

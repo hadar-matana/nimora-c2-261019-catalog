@@ -1,3 +1,4 @@
+import "./legacy-demo-only.mjs";
 // Read-only GraphQL analytics; no auth headers, cookies or raw request logs.
 import { readFile, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";

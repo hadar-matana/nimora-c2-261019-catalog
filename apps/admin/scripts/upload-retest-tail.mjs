@@ -1,3 +1,4 @@
+import "./legacy-demo-only.mjs";
 // Temporary real-time debugger connection, not a deployed Tail Worker.
 // Raw events may contain cookies: process in memory and persist ONLY this whitelist.
 import {readFile,writeFile} from 'node:fs/promises';

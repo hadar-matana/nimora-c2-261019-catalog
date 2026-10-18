@@ -1,3 +1,4 @@
+import "./legacy-demo-only.mjs";
 // Explicitly approved initial deployment. Never retries provisioning requests.
 // No credentials, session headers or raw API responses are logged or persisted.
 import assert from "node:assert/strict";

@@ -1,3 +1,4 @@
+import "./legacy-demo-only.mjs";
 // One activation on the existing Worker, followed by fail-closed restoration.
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';

@@ -1,3 +1,4 @@
+import "./legacy-demo-only.mjs";
 // Run in a private terminal. Password exists only in process memory.
 import assert from 'node:assert/strict';
 import {writeFile} from 'node:fs/promises';

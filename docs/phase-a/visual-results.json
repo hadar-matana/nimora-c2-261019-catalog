@@ -1,0 +1,32 @@
+[
+  {
+    "page": "home",
+    "width": 390,
+    "contentAndGeometryEqual": true
+  },
+  {
+    "page": "about",
+    "width": 390,
+    "contentAndGeometryEqual": true
+  },
+  {
+    "page": "product",
+    "width": 390,
+    "contentAndGeometryEqual": true
+  },
+  {
+    "page": "home",
+    "width": 1512,
+    "contentAndGeometryEqual": true
+  },
+  {
+    "page": "about",
+    "width": 1512,
+    "contentAndGeometryEqual": true
+  },
+  {
+    "page": "product",
+    "width": 1512,
+    "contentAndGeometryEqual": true
+  }
+]
