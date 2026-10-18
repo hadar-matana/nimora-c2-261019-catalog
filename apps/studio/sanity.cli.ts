@@ -1,11 +1,15 @@
+import {target} from "./deployment";
 import {defineCliConfig} from "sanity/cli";
+
+const appId = process.env.SANITY_STUDIO_APP_ID;
+if (!appId || !/^[a-zA-Z0-9_-]+$/.test(appId)) throw new Error("Explicit Studio app ID is required; automatic deployment identity is disabled");
 
 export default defineCliConfig({
   api: {
-    projectId: "3ahm0828",
-    dataset: "production"
+    projectId: target.projectId,
+    dataset: target.dataset
   },
   deployment: {
-    appId: "ynlcza16xj3s49ywsxhw4953"
+    appId
   }
 });

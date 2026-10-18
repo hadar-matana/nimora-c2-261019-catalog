@@ -24,7 +24,7 @@ await writeFile(
 );
 await writeFile(
   process.env.ATELIER_FIXTURE_VARS_PATH || new URL("../worker/.dev.vars", import.meta.url),
-  `OWNER_USERNAME=${account.username}\nOWNER_PASSWORD_HASH=${await bcrypt.hash(account.password, 12)}\nCREDENTIAL_VERSION=${account.version}\nSANITY_MODE=fixture\nSANITY_FIXTURE_ORIGIN=http://127.0.0.1:3003\n`,
+  `OWNER_USERNAME=${account.username}\nOWNER_PASSWORD_HASH=${await bcrypt.hash(account.password, 12)}\nCREDENTIAL_VERSION=${account.version}\nSANITY_PROJECT_ID=fixture01\nSANITY_DATASET=production\nSANITY_API_VERSION=2025-02-19\nSANITY_MODE=fixture\nSANITY_FIXTURE_ORIGIN=http://127.0.0.1:3003\n`,
   { mode: 0o600 },
 );
 let docs = new Map(),

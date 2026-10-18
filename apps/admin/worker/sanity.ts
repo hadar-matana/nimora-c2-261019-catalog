@@ -1,7 +1,11 @@
+import { cmsTarget } from "../../../packages/config/deployment.mjs";
 import type { AdminProduct, Category, ProductImage } from "../src/lib/model";
 import { productSlugify } from "./slug";
 export type SanityEnv = {
   SANITY_MODE?: string;
+  SANITY_PROJECT_ID?: string;
+  SANITY_DATASET?: string;
+  SANITY_API_VERSION?: string;
   SANITY_FIXTURE_ORIGIN?: string;
   SANITY_API_TOKEN?: string;
   SANITY_ALLOW_PRODUCTION_WRITES?: string;
@@ -30,7 +34,6 @@ type Image = {
   [key: string]: unknown;
 };
 export type Catalog = { products: Doc[]; categories: Doc[]; assets: Doc[] };
-const apiVersion = "/v2025-02-19";
 export function uploadRetestActive(env: SanityEnv) {
   const until = Number(env.SANITY_UPLOAD_RETEST_UNTIL);
   const remaining = until - Date.now();
@@ -39,22 +42,27 @@ export function uploadRetestActive(env: SanityEnv) {
 }
 export function connection(env: SanityEnv, writing = false, uploading = false) {
   const fixture = env.SANITY_MODE === "fixture";
-  const origin = fixture
-    ? env.SANITY_FIXTURE_ORIGIN
-    : "https://3ahm0828.api.sanity.io";
-  if (
-    !origin ||
-    (fixture &&
-      (new URL(origin).hostname !== "127.0.0.1" ||
-        new URL(origin).protocol !== "http:"))
-  )
+  if (!fixture && env.SANITY_MODE !== "production")
     throw new ApiError(503, "סביבת הנתונים לא הוגדרה");
   if (writing && !fixture && env.SANITY_ALLOW_PRODUCTION_WRITES !== "approved" &&
       !(uploading && uploadRetestActive(env)))
     throw new ApiError(403, "כתיבה לנתונים החיים דורשת אישור מפורש");
+  let target;
+  try {
+    target = cmsTarget(env.SANITY_PROJECT_ID, env.SANITY_DATASET, env.SANITY_API_VERSION);
+  } catch {
+    throw new ApiError(503, "סביבת הנתונים לא הוגדרה");
+  }
+  const origin = fixture ? env.SANITY_FIXTURE_ORIGIN : target.origin;
+  if (fixture) {
+    let url;
+    try { url = new URL(origin ?? ""); } catch { throw new ApiError(503, "סביבת הנתונים לא הוגדרה"); }
+    if (url.hostname !== "127.0.0.1" || url.protocol !== "http:" || url.username || url.password || url.pathname !== "/" || url.search || url.hash)
+      throw new ApiError(503, "סביבת הנתונים לא הוגדרה");
+  }
   const token = fixture ? "isolated-sanity-fixture" : env.SANITY_API_TOKEN;
   if (!token) throw new ApiError(503, "חיבור מאובטח לקטלוג טרם הוגדר");
-  return { origin: origin!, token: token!, fixture };
+  return { ...target, origin: origin!, token: token!, fixture, apiVersion: "/v" + target.apiVersion, assetPrefix: fixture ? origin + "/images/" : target.assetPrefix };
 }
 export async function readJson(
   response: Response,
@@ -92,8 +100,8 @@ export async function query<T>(
   groq: string,
   params: Record<string, unknown> = {},
 ): Promise<T> {
-  const { origin, token } = connection(env);
-  const url = new URL(origin + apiVersion + "/data/query/production");
+  const { origin, token, apiVersion, dataset } = connection(env);
+  const url = new URL(origin + apiVersion + "/data/query/" + dataset);
   url.searchParams.set("query", groq);
   url.searchParams.set("perspective", "raw");
   for (const [k, v] of Object.entries(params))
@@ -109,11 +117,11 @@ export async function query<T>(
   return result.result;
 }
 export async function mutate(env: SanityEnv, mutations: unknown[]) {
-  const { origin, token } = connection(env, true);
+  const { origin, token, apiVersion, dataset } = connection(env, true);
   const r = await fetch(
     origin +
       apiVersion +
-      "/data/mutate/production?visibility=sync&returnIds=true",
+      "/data/mutate/" + dataset + "?visibility=sync&returnIds=true",
     {
       method: "POST",
       headers: {
@@ -519,4 +527,3 @@ export async function saveCategories(env: SanityEnv, input: unknown) {
   if (mutations.length) await mutate(env, mutations);
   return { ok: true };
 }
-export { apiVersion };

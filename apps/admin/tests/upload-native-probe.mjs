@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import {uploadImage} from '../worker/uploads';
 const assetId='image-'+ 'a'.repeat(40)+'-1x1-png';
-const env={SANITY_MODE:'fixture',SANITY_FIXTURE_ORIGIN:'http://127.0.0.1:3003'};
+const env={SANITY_PROJECT_ID:'fixture01',SANITY_DATASET:'production',SANITY_API_VERSION:'2025-02-19',SANITY_MODE:'fixture',SANITY_FIXTURE_ORIGIN:'http://127.0.0.1:3003'};
 const probe = {async fetch(){
  const original=globalThis.fetch,checks=[];
  const bytes=new Uint8Array(128);bytes.set([137,80,78,71,13,10,26,10]);

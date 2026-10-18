@@ -16,7 +16,7 @@ globalThis.fetch=async(url,options)=>{
  return new Response('{}',{status:mode==='conflict'?409:500});
 };
 try{
- const env={SANITY_MODE:'fixture',SANITY_FIXTURE_ORIGIN:'http://127.0.0.1:3003'};
+ const env={SANITY_PROJECT_ID:'fixture01',SANITY_DATASET:'production',SANITY_API_VERSION:'2025-02-19',SANITY_MODE:'fixture',SANITY_FIXTURE_ORIGIN:'http://127.0.0.1:3003'};
  await assert.rejects(changeOption(env,{kind:'sizes',action:'add',value:'XXL',siteSettings:{evil:true}}),e=>e.status===409);
  mode='failure';await assert.rejects(changeOption(env,{kind:'sizes',action:'add',value:'XXL'}),e=>e.status===502);
  assert.equal(upstream,4); // One read and one attempt each; no mutation retry.

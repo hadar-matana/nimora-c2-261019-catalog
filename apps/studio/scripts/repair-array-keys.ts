@@ -1,7 +1,8 @@
+import {target} from "../deployment";
 import {getCliClient} from "sanity/cli";
 import {withStableArrayKeys} from "../lib/arrayKeys";
 
-const client = getCliClient({apiVersion: "2025-02-19"}).withConfig({perspective: "raw"});
+const client = getCliClient({apiVersion: target.apiVersion}).withConfig({perspective: "raw"});
 const dryRun = process.argv.includes("--dry-run");
 
 type ArrayItem = {

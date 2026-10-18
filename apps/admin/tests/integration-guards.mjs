@@ -28,11 +28,11 @@ try {
   for (const env of [
     {},
     { SANITY_API_TOKEN: "fixture-not-a-real-token" },
-    { SANITY_MODE: "production", SANITY_API_TOKEN: "fixture-not-a-real-token" },
+    { SANITY_PROJECT_ID: "fixture01", SANITY_DATASET: "production", SANITY_API_VERSION: "2025-02-19", SANITY_MODE: "production", SANITY_API_TOKEN: "fixture-not-a-real-token" },
   ])
     assert.throws(
       () => connection(env, true),
-      (e) => e.status === 403,
+      (e) => [403, 503].includes(e.status),
     );
   for (const origin of [
     "https://other.example",
@@ -42,7 +42,7 @@ try {
     assert.throws(
       () =>
         connection(
-          { SANITY_MODE: "fixture", SANITY_FIXTURE_ORIGIN: origin },
+          { SANITY_PROJECT_ID: "fixture01", SANITY_DATASET: "production", SANITY_API_VERSION: "2025-02-19", SANITY_MODE: "fixture", SANITY_FIXTURE_ORIGIN: origin },
           true,
         ),
       (e) => e.status === 503,
@@ -50,7 +50,7 @@ try {
   assert.equal(
     connection(
       {
-        SANITY_MODE: "fixture",
+        SANITY_PROJECT_ID: "fixture01", SANITY_DATASET: "production", SANITY_API_VERSION: "2025-02-19", SANITY_MODE: "fixture",
         SANITY_FIXTURE_ORIGIN: "http://127.0.0.1:3003",
       },
       true,
@@ -93,7 +93,7 @@ globalThis.fetch = async (address, options) => {
   return Response.json({ transactionId: "fixture-only" });
 };
 try {
-  await saveProduct({ SANITY_MODE: "fixture", SANITY_FIXTURE_ORIGIN: "http://127.0.0.1:3003" }, "asset-gap-test", {
+  await saveProduct({ SANITY_PROJECT_ID: "fixture01", SANITY_DATASET: "production", SANITY_API_VERSION: "2025-02-19", SANITY_MODE: "fixture", SANITY_FIXTURE_ORIGIN: "http://127.0.0.1:3003" }, "asset-gap-test", {
     id: "asset-gap-test", name: "QA product", description: "", priceAgorot: 100,
     categoryId: "category-one", sizes: [], colors: [], images: [{ id: "image-one", assetId, alt: "QA product" }],
     revision: { published: null, draft: null },
@@ -118,7 +118,7 @@ const remote = {
   LOCAL_COMPAT_PROOF: "0",
   ADMIN_ORIGIN: "https://approved.invalid",
   ADMIN_REMOTE_ENABLED: "approved",
-  SANITY_MODE: "production",
+  SANITY_PROJECT_ID: "fixture01", SANITY_DATASET: "production", SANITY_API_VERSION: "2025-02-19", SANITY_MODE: "production",
   SANITY_API_TOKEN: "fixture-only-not-real",
   OWNER_USERNAME: "fixture-owner",
   OWNER_PASSWORD_HASH: "$2b$12$" + "a".repeat(53),
@@ -140,7 +140,7 @@ assert.equal(
 );
 assert.equal(
   allowedHost(
-    { ...remote, SANITY_MODE: "fixture" },
+    { ...remote, SANITY_PROJECT_ID: "fixture01", SANITY_DATASET: "production", SANITY_API_VERSION: "2025-02-19", SANITY_MODE: "fixture" },
     "https://approved.invalid/login",
   ),
   false,

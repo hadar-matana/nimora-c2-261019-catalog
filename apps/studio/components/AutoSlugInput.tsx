@@ -1,8 +1,9 @@
+import {target} from "../deployment";
 import {useEffect, useRef} from "react";
 import {set, useClient, useFormValue, type SlugInputProps} from "sanity";
 import {fallbackProductSlug, productSlugify} from "../lib/slug";
 
-const apiVersion = "2025-02-19";
+const apiVersion = target.apiVersion;
 
 export function AutoSlugInput(props: SlugInputProps) {
   const name = useFormValue(["name"]);

@@ -1,0 +1,26 @@
+// Copy outside tracked configuration and fill every client-specific field.
+// Example only: Phase A does not provision or deploy anything.
+{
+  "name": "replace-with-client-admin-name",
+  "main": "index.ts",
+  "compatibility_date": "2026-10-13",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "assets": {"directory": "../out", "binding": "ASSETS", "run_worker_first": true},
+  "durable_objects": {"bindings": [{"name": "AUTH", "class_name": "OwnerAuth"}]},
+  "migrations": [{"tag": "v1", "new_sqlite_classes": ["OwnerAuth"]}],
+  "vars": {
+    "LOCAL_COMPAT_PROOF": "0",
+    "ADMIN_REMOTE_ENABLED": "disabled",
+    "ADMIN_ORIGIN": "",
+    "SANITY_MODE": "production",
+    "SANITY_PROJECT_ID": "",
+    "SANITY_DATASET": "",
+    "SANITY_API_VERSION": "",
+    "SANITY_ALLOW_PRODUCTION_WRITES": "disabled",
+    "SANITY_UPLOAD_RETEST_UNTIL": "0",
+    "ADMIN_QA_PRODUCT_ID": "",
+    "SESSION_TTL_SECONDS": "28800"
+  }
+}

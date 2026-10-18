@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 const require=createRequire(import.meta.url), esbuild=createRequire(require.resolve('wrangler'))('esbuild');
 const built=await esbuild.build({entryPoints:[new URL('../worker/about.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'neutral'});
 const {readAbout,saveAbout}=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].contents).toString('base64'));
-const env={SANITY_MODE:'fixture',SANITY_FIXTURE_ORIGIN:'http://127.0.0.1:3003'};
+const env={SANITY_PROJECT_ID:'fixture01',SANITY_DATASET:'production',SANITY_API_VERSION:'2025-02-19',SANITY_MODE:'fixture',SANITY_FIXTURE_ORIGIN:'http://127.0.0.1:3003'};
 const original=globalThis.fetch;
 let docs=[], mutations=[], fail=false;
 globalThis.fetch=async(url,options)=>{

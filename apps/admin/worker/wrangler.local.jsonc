@@ -16,6 +16,9 @@
   "migrations": [{ "tag": "local-v1", "new_sqlite_classes": ["OwnerAuth"] }],
   "vars": {
     "LOCAL_COMPAT_PROOF": "1",
+    "SANITY_PROJECT_ID": "fixture01",
+    "SANITY_DATASET": "production",
+    "SANITY_API_VERSION": "2025-02-19",
     "ADMIN_ORIGIN": "http://127.0.0.1:3002",
   },
 }

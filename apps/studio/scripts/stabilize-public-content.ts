@@ -1,6 +1,7 @@
+import {target} from "../deployment";
 import {getCliClient} from "sanity/cli";
 
-const client = getCliClient({apiVersion: "2025-02-19"});
+const client = getCliClient({apiVersion: target.apiVersion});
 
 const galleryCaptions = [
   "מראה רך ונקי לשילוב יומיומי.",

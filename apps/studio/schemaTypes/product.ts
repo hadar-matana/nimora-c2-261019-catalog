@@ -1,3 +1,4 @@
+import {target} from "../deployment";
 import {defineField, defineType} from "sanity";
 import {AutoSlugInput} from "../components/AutoSlugInput";
 import {ProductImagesInput} from "../components/ProductImagesInput";
@@ -138,7 +139,7 @@ export const product = defineType({
         slugify: (input) => productSlugify(input),
         isUnique: async (slug, context) => {
           const documentId = context.document?._id?.replace(/^drafts\./, "");
-          return context.getClient({apiVersion: "2025-02-19"}).fetch(
+          return context.getClient({apiVersion: target.apiVersion}).fetch(
             `!defined(*[
               _type == "product" &&
               slug.current == $slug &&

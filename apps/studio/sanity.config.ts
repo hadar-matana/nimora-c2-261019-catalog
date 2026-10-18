@@ -1,13 +1,14 @@
+import {target, studioName, studioTitle} from "./deployment";
 import {defineConfig} from "sanity";
 import {structureTool} from "sanity/structure";
 import {schemaTypes} from "./schemaTypes";
 import {structure} from "./structure";
 
 export default defineConfig({
-  name: "fashion-catalog-demo",
-  title: "Fashion Catalog Demo",
-  projectId: "3ahm0828",
-  dataset: "production",
+  name: studioName!,
+  title: studioTitle!,
+  projectId: target.projectId,
+  dataset: target.dataset,
   plugins: [structureTool({structure})],
   schema: {
     types: schemaTypes

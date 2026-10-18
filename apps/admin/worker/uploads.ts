@@ -1,6 +1,5 @@
 import {
   ApiError,
-  apiVersion,
   connection,
   readJson,
   type SanityEnv,
@@ -154,7 +153,7 @@ export async function uploadImage(
       );
     }
     const response = await fetch(
-      target.origin + apiVersion + "/assets/images/production",
+      target.origin + target.apiVersion + "/assets/images/" + target.dataset,
       {
         method: "POST",
         headers: {
@@ -185,9 +184,7 @@ export async function uploadImage(
     };
     const asset = payload.document;
     const dimensions = asset?.metadata?.dimensions;
-    const prefixUrl = target.fixture
-      ? target.origin + "/images/"
-      : "https://cdn.sanity.io/images/3ahm0828/production/";
+    const prefixUrl = target.assetPrefix;
     if (
       !asset ||
       asset._type !== "sanity.imageAsset" ||

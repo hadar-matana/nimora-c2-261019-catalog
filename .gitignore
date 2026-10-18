@@ -14,3 +14,8 @@ build
 .wrangler
 .dev.vars*
 .open-next
+
+# Client-specific local configuration and secret variants
+.env.*
+!.env.example
+wrangler.client.local.jsonc

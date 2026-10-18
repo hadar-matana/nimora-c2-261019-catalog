@@ -1,7 +1,8 @@
+import {target} from "../deployment";
 import {getCliClient} from "sanity/cli";
 import {stableArrayKey} from "../lib/arrayKeys";
 
-const client = getCliClient({apiVersion: "2025-02-19"});
+const client = getCliClient({apiVersion: target.apiVersion});
 
 type DemoImage = {
   url: string;
@@ -170,7 +171,7 @@ async function deletePrivateSeedDocs() {
 }
 
 async function seed() {
-  console.log("Seeding Fashion Catalog Demo into Sanity project 3ahm0828 / production");
+  console.log(`Seeding demo content into Sanity project ${target.projectId} / ${target.dataset}`);
   await deletePrivateSeedDocs();
 
   await client.createIfNotExists({
