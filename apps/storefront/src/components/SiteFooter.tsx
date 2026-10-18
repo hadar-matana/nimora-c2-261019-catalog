@@ -1,9 +1,11 @@
+/* eslint-disable @next/next/no-img-element -- Static export uses the configured Sanity image builder. */
 import {Instagram, Mail, MessageCircle} from "lucide-react";
-import {defaultSiteConfig} from "@/config/site";
+import {storefrontBrand} from "@/lib/brand";
 import {createGeneralWhatsappHref, getContactLinks} from "@/lib/contact";
 import type {SiteSettings} from "@/types/content";
 
 export function SiteFooter({settings}: {settings: SiteSettings}) {
+  const brand = storefrontBrand(settings);
   const {instagramUrl, whatsappNumber} = getContactLinks(settings);
   const whatsappHref = whatsappNumber ? createGeneralWhatsappHref(whatsappNumber) : undefined;
 
@@ -11,9 +13,9 @@ export function SiteFooter({settings}: {settings: SiteSettings}) {
     <footer className="mt-16 border-t border-[var(--border)] bg-white">
       <div className="container grid gap-8 py-8 md:grid-cols-[1fr_auto_1fr] md:items-center">
         <div>
-          <p className="atelier-wordmark text-[2rem] md:text-[2.6rem]">{defaultSiteConfig.displayName}</p>
+          <p className="atelier-wordmark text-[2rem] md:text-[2.6rem]">{brand.logo ? <img src={brand.logo} alt={brand.name} className="max-h-14 max-w-48 object-contain" /> : brand.name}</p>
         </div>
-        <p className="text-center text-sm text-[var(--muted)]">אופנה נשית. בכל יום מחדש.</p>
+        <p className="text-center text-sm text-[var(--muted)]">{brand.tagline}</p>
         <div className="flex flex-wrap justify-start gap-4 text-sm font-semibold md:justify-end">
           {instagramUrl ? (
             <a href={instagramUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 transition-opacity hover:opacity-65">

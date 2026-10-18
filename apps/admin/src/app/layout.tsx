@@ -1,3 +1,5 @@
+import {adminBrand} from "@/lib/brand";
+import type {CSSProperties} from "react";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { MockProvider } from "@/components/MockProvider";
@@ -6,7 +8,7 @@ import { ApiProofProvider } from "@/components/ApiProofProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ATELIER | ניהול החנות — הדגמה מקומית",
+  title: `${adminBrand.name} | ניהול החנות`,
   robots: { index: false, follow: false },
 };
 
@@ -18,7 +20,7 @@ export default async function RootLayout({
   if (process.env.ADMIN_LOCAL_PROOF !== "0")
     return (
       <html lang="he" dir="rtl">
-        <body>
+        <body style={adminBrand.accentColor ? {"--brand-accent": adminBrand.accentColor, "--brand-contrast": adminBrand.accentContrastColor ?? "#ffffff"} as CSSProperties : undefined}>
           <ToastProvider>
             <ApiProofProvider>{children}</ApiProofProvider>
           </ToastProvider>
@@ -32,7 +34,7 @@ export default async function RootLayout({
     process.env.ADMIN_LOCAL_PREVIEW === "1";
   return (
     <html lang="he" dir="rtl">
-      <body>
+      <body style={adminBrand.accentColor ? {"--brand-accent": adminBrand.accentColor, "--brand-contrast": adminBrand.accentContrastColor ?? "#ffffff"} as CSSProperties : undefined}>
         {local && enabled ? (
           <ToastProvider>
             <MockProvider>{children}</MockProvider>

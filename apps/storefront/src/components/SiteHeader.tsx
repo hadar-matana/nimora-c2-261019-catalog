@@ -1,11 +1,13 @@
+/* eslint-disable @next/next/no-img-element -- Static export uses the configured Sanity image builder. */
 import Link from "next/link";
 import {Instagram, MessageCircle} from "lucide-react";
-import {defaultSiteConfig} from "@/config/site";
+import {storefrontBrand} from "@/lib/brand";
 import {createGeneralWhatsappHref, getContactLinks} from "@/lib/contact";
 import type {SiteSettings} from "@/types/content";
 
 export function SiteHeader({settings}: {settings: SiteSettings}) {
-  const displayName = defaultSiteConfig.displayName;
+  const brand = storefrontBrand(settings);
+  const displayName = brand.name;
   const {instagramUrl, whatsappNumber} = getContactLinks(settings);
   const whatsappHref = whatsappNumber ? createGeneralWhatsappHref(whatsappNumber) : undefined;
 
@@ -36,8 +38,8 @@ export function SiteHeader({settings}: {settings: SiteSettings}) {
             </a>
           ) : null}
         </div>
-        <Link href="/" className="atelier-wordmark transition-opacity duration-200 hover:opacity-75" aria-label="ATELIER דף הבית">
-          {displayName}
+        <Link href="/" className="atelier-wordmark transition-opacity duration-200 hover:opacity-75" aria-label={`${displayName} דף הבית`}>
+          {brand.logo ? <img src={brand.logo} alt={displayName} className="max-h-14 max-w-48 object-contain" /> : displayName}
         </Link>
         <nav aria-label="ניווט ראשי" className="flex justify-end text-sm font-semibold">
           <Link className="tap nav-link inline-flex items-center px-1 text-[var(--ink)]" href="/about">

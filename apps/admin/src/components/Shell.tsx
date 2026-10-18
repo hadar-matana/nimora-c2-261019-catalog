@@ -1,4 +1,5 @@
 "use client";
+import {Brand} from "@/components/Brand";
 
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
@@ -47,7 +48,7 @@ export function Shell({ children }: { children: ReactNode }) {
           <Menu size={22} />
         </button>
         <span className="wordmark" dir="ltr">
-          ATELIER
+          <Brand />
         </span>
         <span className="avatar small">א</span>
       </header>
@@ -64,7 +65,7 @@ export function Shell({ children }: { children: ReactNode }) {
       >
         <div className="sidebar-brand">
           <span className="wordmark" dir="ltr">
-            ATELIER
+            <Brand />
           </span>
           <button
             className="icon-button mobile-only"
@@ -98,7 +99,7 @@ export function Shell({ children }: { children: ReactNode }) {
           <div className="owner">
             <span className="avatar">א</span>
             <div>
-              שלום, בעלת החנות<span dir="ltr">ATELIER</span>
+              שלום, בעלת החנות<span dir="ltr"><Brand /></span>
             </div>
           </div>
           <button
@@ -131,7 +132,7 @@ export function Shell({ children }: { children: ReactNode }) {
         </div>
         {children}
         <footer className="workspace-footer">
-          <span dir="ltr">ATELIER</span>
+          <span dir="ltr"><Brand /></span>
           <span>כל הפריטים שלך. במקום אחד.</span>
         </footer>
       </main>

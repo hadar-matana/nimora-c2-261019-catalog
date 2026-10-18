@@ -2110,3 +2110,5 @@ summary:focus-visible {
 .about-actions {display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px;}
 .about-preview {border-top: 1px solid #ddd; margin-top: 32px; padding-top: 24px; overflow-wrap: anywhere;}
 .about-preview p {white-space: pre-line; line-height: 1.9; margin-top: 20px;}
+
+body[style] .button.primary { background: var(--brand-accent); border-color: var(--brand-accent); color: var(--brand-contrast); }

@@ -63,6 +63,8 @@ export type GalleryImage = {
 };
 
 export type SiteSettings = {
+  tagline?: string;
+  accentContrastColor?: string;
   aboutHeading?: string;
   aboutIntro?: string;
   aboutBody?: string;

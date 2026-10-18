@@ -1,4 +1,5 @@
 "use client";
+import {Brand} from "@/components/Brand";
 
 import { useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
@@ -50,7 +51,7 @@ export default function LoginPage() {
       <section className="login-form-panel">
         <div className="login-inner">
           <span className="wordmark login-wordmark" dir="ltr">
-            ATELIER
+            <Brand />
           </span>
           <div className="login-title">
             <span className="eyebrow">ניהול החנות שלך</span>

@@ -5,6 +5,8 @@ export const siteSettings = defineType({
   title: "הגדרות האתר",
   type: "document",
   fields: [
+    defineField({name: "tagline", title: "סלוגן", type: "string"}),
+    defineField({name: "accentContrastColor", title: "צבע טקסט על הדגשה", type: "string", validation: Rule => Rule.regex(/^#[0-9a-fA-F]{6}$/)}),
     defineField({name: "aboutHeading", title: "אודות — כותרת", type: "string", validation: Rule => Rule.max(120)}),
     defineField({name: "aboutIntro", title: "אודות — פתיח", type: "text", rows: 3, validation: Rule => Rule.max(600)}),
     defineField({name: "aboutBody", title: "אודות — הסיפור שלנו", type: "text", rows: 12, description: "שורה ריקה מפרידה בין פסקאות", validation: Rule => Rule.max(12000)}),
@@ -12,7 +14,6 @@ export const siteSettings = defineType({
       name: "displayName",
       title: "שם תצוגה",
       type: "string",
-      initialValue: "ATELIER",
       validation: (Rule) => Rule.required()
     }),
     defineField({
@@ -26,13 +27,16 @@ export const siteSettings = defineType({
       title: "לוגו",
       type: "image",
       options: {hotspot: true},
-      fields: [{name: "alt", title: "טקסט חלופי", type: "string"}]
+      fields: [
+    defineField({name: "tagline", title: "סלוגן", type: "string"}),
+    defineField({name: "accentContrastColor", title: "צבע טקסט על הדגשה", type: "string", validation: Rule => Rule.regex(/^#[0-9a-fA-F]{6}$/)}),{name: "alt", title: "טקסט חלופי", type: "string"}]
     }),
     defineField({
       name: "accentColor",
       title: "צבע הדגשה",
       type: "string",
-      description: "ערך HEX, לדוגמה #5D654E"
+      description: "ערך HEX, לדוגמה #5D654E",
+      validation: Rule => Rule.regex(/^#[0-9a-fA-F]{6}$/)
     }),
     defineField({
       name: "instagramUrl",
@@ -85,7 +89,7 @@ export const siteSettings = defineType({
       name: "demoMode",
       title: "מצב הדגמה",
       type: "boolean",
-      initialValue: true
+      initialValue: false
     })
   ],
   preview: {

@@ -1,11 +1,12 @@
 import type {Metadata} from "next";
+import {storefrontBrand} from "@/lib/brand";
 import {CatalogClient} from "@/components/CatalogClient";
 import {getAllCategories, getAllProducts, getSiteSettings} from "@/lib/queries";
 
-export const metadata: Metadata = {
-  title: "ATELIER",
-  description: "גלו את הקולקציה ואת הפריטים שלנו."
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const brand = storefrontBrand(await getSiteSettings());
+  return {title: {absolute: brand.name}};
+}
 
 export default async function HomePage() {
   const [products, categories, settings] = await Promise.all([

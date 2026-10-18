@@ -1,4 +1,5 @@
 "use client";
+import {Brand} from "@/components/Brand";
 import { useState } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Dialog } from "./Dialog";
@@ -39,7 +40,7 @@ export function ProductPreview({
       </div>
       <section className="store-preview">
         <div className="preview-brand wordmark" dir="ltr">
-          ATELIER
+          <Brand />
         </div>
         {view === "card" ? (
           <article className="preview-card">

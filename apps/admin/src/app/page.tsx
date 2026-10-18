@@ -1,4 +1,5 @@
 "use client";
+import {Brand} from "@/components/Brand";
 import Link from "next/link";
 import { Plus, ArrowLeft, Tag, LayoutGrid } from "lucide-react";
 import { Shell } from "@/components/Shell";
@@ -13,7 +14,7 @@ export default function DashboardPage() {
       <div className="page-heading">
         <div>
           <span className="eyebrow" dir="ltr">
-            ATELIER / YOUR STORE
+            <Brand /> / YOUR STORE
           </span>
           <h1>שלום, טוב שאת כאן.</h1>
           <p>יום חדש, מקום לרעיונות חדשים.</p>

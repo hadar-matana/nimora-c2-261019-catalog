@@ -237,3 +237,11 @@ select {
     transform: scale(1);
   }
 }
+
+/* Client accents inherit the approved demo palette when no override is present. */
+body[style] .cta-button {
+  background: var(--accent, var(--ink));
+  color: var(--accent-contrast, #fff);
+}
+body[style] :focus-visible { outline-color: var(--accent, var(--ink)); }
+body[style] .filter-indicator, body[style] .gallery-dot.is-selected { background: var(--accent); }

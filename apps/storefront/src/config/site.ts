@@ -1,8 +1,11 @@
+import {cmsTarget, deploymentKind, publicUrl} from "../../../../packages/config/deployment.mjs";
+
+export const deployment = deploymentKind(process.env.NEXT_PUBLIC_DEPLOYMENT_KIND);
 export const defaultSiteConfig = {
-  displayName: "ATELIER",
-  description: "גלו את הקולקציה ואת הפריטים שלנו.",
-  baseUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://fashion-catalog-demo.pages.dev",
-  studioUrl: process.env.NEXT_PUBLIC_STUDIO_URL ?? "https://fashion-catalog-demo.sanity.studio",
+  displayName: deployment === "demo" ? "ATELIER" : "",
+  description: deployment === "demo" ? "גלו את הקולקציה ואת הפריטים שלנו." : "",
+  baseUrl: publicUrl(process.env.NEXT_PUBLIC_SITE_URL, "storefront URL"),
+  studioUrl: process.env.NEXT_PUBLIC_STUDIO_URL ? publicUrl(process.env.NEXT_PUBLIC_STUDIO_URL, "Studio URL") : "",
   instagramUrl: "",
   whatsappNumber: "",
   showPrices: true,
@@ -10,9 +13,5 @@ export const defaultSiteConfig = {
   demoMode: false,
   currency: "ILS"
 };
-
-export const sanityConfig = {
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "3ahm0828",
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
-  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION ?? "2025-02-19"
-};
+const target = cmsTarget(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID, process.env.NEXT_PUBLIC_SANITY_DATASET, process.env.NEXT_PUBLIC_SANITY_API_VERSION);
+export const sanityConfig = {projectId: target.projectId, dataset: target.dataset, apiVersion: target.apiVersion};

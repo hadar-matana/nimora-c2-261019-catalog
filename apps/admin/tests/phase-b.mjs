@@ -1,11 +1,14 @@
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
+import {createRequire} from "node:module";
+const require = createRequire(import.meta.url);
+const sharp = createRequire(require.resolve("next"))("sharp");
 import { mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const root = fileURLToPath(new URL("../../../", import.meta.url));
-const shots = path.join(root, "docs/admin-screenshots");
+const shots = path.join(root, "docs/phase-a/admin-screenshots");
 await mkdir(shots, { recursive: true });
 const browser = await chromium.launch({
   headless: true,
@@ -91,8 +94,8 @@ try {
     await shot(page, `card-${width}`);
     await button(page, "חזרה לעריכה").click();
     await button(page, "חזרה למוצרים").click();
-    await nav(page, "קטגוריות");
-    await page.getByRole("heading", { name: "קטגוריות", exact: true }).waitFor();
+    await nav(page, "אפשרויות הקטלוג");
+    await page.getByRole("heading", { name: "אפשרויות הקטלוג", exact: true }).waitFor();
     await shot(page, `categories-${width}`);
     await noOverflow(page);
     await context.close();
@@ -192,12 +195,12 @@ try {
       mimeType: "text/plain",
       buffer: Buffer.from("not an image"),
     });
-  await page.getByRole("alert").filter({ hasText: "יש לבחור תמונת" }).waitFor();
+  await page.locator(".field-error[role=alert]").filter({ hasText: "יש לבחור תמונת" }).waitFor();
   await page
     .locator("input[type=file]")
     .setInputFiles([
-      path.join(root, "apps/admin/public/demo/dress.png"),
-      path.join(root, "apps/admin/public/demo/blazer.png"),
+      {name: "dress.png", mimeType: "image/png", buffer: await sharp(path.join(root, "apps/admin/public/demo/dress.png")).resize(800).png().toBuffer()},
+      {name: "blazer.png", mimeType: "image/png", buffer: await sharp(path.join(root, "apps/admin/public/demo/blazer.png")).resize(800).png().toBuffer()},
     ]);
   await page.locator(".image-tile").nth(1).waitFor();
   const before = await page.locator(".image-tile img").first().getAttribute("src");
@@ -247,7 +250,7 @@ try {
     "Publish with optional sizes/colors absent",
   );
 
-  await nav(page, "קטגוריות");
+  await nav(page, "אפשרויות הקטלוג");
   await page.locator("#category-name").fill("אקססוריז");
   await button(page, "הוספה").click();
   check((await page.locator(".category-row").count()) === 5, "Add category");

@@ -1,4 +1,4 @@
-import {defaultSiteConfig} from "@/config/site";
+import {defaultSiteConfig, deployment} from "@/config/site";
 import {client} from "@/lib/sanity";
 import type {Category, Collection, GalleryImage, Product, SiteSettings} from "@/types/content";
 
@@ -57,6 +57,8 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         aboutIntro,
         aboutBody,
         displayName,
+        tagline,
+        accentContrastColor,
         description,
         logo ${imageProjection},
         accentColor,
@@ -70,7 +72,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     )) ?? {}
   );
   // Keep legacy demo metadata out of the brand experience without editing CMS data.
-  if (settings.description?.includes("קטלוג אופנה להמחשת")) {
+  if (deployment === "demo" && settings.description?.includes("קטלוג אופנה להמחשת")) {
     return {...settings, description: defaultSiteConfig.description};
   }
   return settings;
