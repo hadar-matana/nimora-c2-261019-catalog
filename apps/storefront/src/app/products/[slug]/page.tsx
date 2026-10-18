@@ -50,14 +50,14 @@ export default async function ProductPage({params}: ProductPageProps) {
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1.14fr)_minmax(360px,0.86fr)] lg:gap-16">
         <ProductGallery images={product.images} productName={product.name} />
 
-        <div className="product-information lg:sticky lg:top-28 lg:self-start">
+        <div className="lg:sticky lg:top-28 lg:self-start">
           <div className="border-b border-[var(--border)] pb-7">
             {context ? <p className="mb-4 text-sm text-[var(--muted)]">{context}</p> : null}
             <h1 className="text-3xl font-normal leading-tight md:text-5xl">{product.name}</h1>
             {showPrices && product.priceAgorot ? (
-              <p className="mt-4 text-xl font-normal md:text-2xl">{formatPrice(product.priceAgorot, product.currency)}</p>
+              <p className="mt-4 text-xl font-semibold md:text-2xl">{formatPrice(product.priceAgorot, product.currency)}</p>
             ) : null}
-            {product.description ? <p className="mt-6 whitespace-pre-line text-base leading-8 text-[var(--muted)]">{product.description}</p> : null}
+            {product.description ? <p className="mt-6 text-lg leading-8 text-[var(--muted)]">{product.description}</p> : null}
           </div>
 
           <ProductInquiryPanel product={product} settings={settings} />

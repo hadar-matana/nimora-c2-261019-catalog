@@ -9,13 +9,13 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AboutPage() {
   const settings = await getSiteSettings();
   const paragraphs = settings.aboutBody?.trim().split(/\n\s*\n/).filter(Boolean) ?? [];
-  return <section className="container about-page">
-    <div className="about-heading"><p className="section-label">אודות</p><h1>{settings.aboutHeading?.trim() || 'הסיפור שלנו'}</h1>
-      {settings.aboutIntro?.trim() && <p className="about-intro" dir="auto">{settings.aboutIntro}</p>}
+  return <section className="container py-8 md:py-16">
+    <div className="max-w-2xl space-y-6"><p className="section-label">אודות</p><h1 className="text-3xl font-normal leading-tight md:text-5xl">{settings.aboutHeading?.trim() || 'הסיפור שלנו'}</h1>
+      {settings.aboutIntro?.trim() && <p className="whitespace-pre-line text-lg leading-8 text-[var(--muted)]" dir="auto">{settings.aboutIntro}</p>}
     </div>
-    <div className="about-story">
+    <div className="mt-8 max-w-2xl space-y-6 whitespace-pre-line break-words text-lg leading-8 text-[var(--muted)]">
       {paragraphs.length ? paragraphs.map((text, index) => <p key={index} dir="auto">{text}</p>) : <p>עוד מעט נשתף כאן את הסיפור שלנו. בינתיים, מוזמנות לגלות את הפריטים.</p>}
-      <Link href="/catalog" className="editorial-link">לגלות את הקולקציה <span aria-hidden="true">←</span></Link>
+      <Link href="/catalog" className="tap inline-flex items-center gap-2 text-sm font-semibold text-[var(--ink)] underline underline-offset-4">לגלות את הקולקציה <span aria-hidden="true">←</span></Link>
     </div>
   </section>;
 }
