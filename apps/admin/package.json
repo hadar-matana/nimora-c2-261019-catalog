@@ -1,0 +1,44 @@
+{
+  "name": "admin",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm build && pnpm dev:integration",
+    "build": "next build --webpack",
+    "start": "pnpm dev:integration",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "test:ui": "node tests/phase-b.mjs",
+    "test:auth": "node --experimental-strip-types --test tests/mock-auth.test.mjs",
+    "build:proof": "ADMIN_LOCAL_PROOF=1 next build --webpack",
+    "typecheck:worker": "tsc -p worker/tsconfig.json",
+    "dev:proof": "WRANGLER_LOG_PATH=/private/tmp/atelier-wrangler.log wrangler dev --config worker/wrangler.local.jsonc --local --ip 127.0.0.1 --port 3002 --inspector-port 9229 --persist-to .wrangler/proof-state",
+    "provision:local": "node scripts/provision-local.mjs",
+    "dev:mock": "ADMIN_LOCAL_PROOF=0 next dev --hostname 127.0.0.1 --port 3001",
+    "build:mock": "ADMIN_LOCAL_PROOF=0 next build --webpack",
+    "dev:fixture": "node tests/sanity-fixture.mjs",
+    "dev:integration": "WRANGLER_LOG_PATH=/private/tmp/atelier-integration.log WRANGLER_SEND_METRICS=false wrangler dev --config worker/wrangler.local.jsonc --local --ip 127.0.0.1 --port 3002 --inspector-port 9229 --persist-to .wrangler/integration-state",
+    "test:integration": "node tests/integration.mjs",
+    "test:streaming": "DIRECT_WORKER_VERIFY=1 node tests/streaming.mjs"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "hono": "^4.13.13",
+    "lucide-react": "^0.548.0",
+    "next": "^16.4.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261014.1",
+    "@types/node": "^24.8.1",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "eslint": "^9.37.0",
+    "eslint-config-next": "^16.4.0",
+    "playwright": "1.62.1",
+    "typescript": "^5.9.3",
+    "wrangler": "4.150.0"
+  }
+}

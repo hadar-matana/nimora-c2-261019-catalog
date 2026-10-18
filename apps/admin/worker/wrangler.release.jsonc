@@ -1,0 +1,39 @@
+// Controlled owner writes approved; bounded upload retest diagnostics remain disabled.
+{
+  "name": "atelier-admin",
+  "account_id": "07eb45a2b5a037d1138beea811cf549b",
+  "main": "index.ts",
+  "compatibility_date": "2026-10-13",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": "../out",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "AUTH",
+        "class_name": "OwnerAuth",
+      },
+    ],
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["OwnerAuth"],
+    },
+  ],
+  "vars": {
+    "LOCAL_COMPAT_PROOF": "0",
+    "ADMIN_REMOTE_ENABLED": "approved",
+    "ADMIN_ORIGIN": "https://atelier-admin.hadarmat.workers.dev",
+    "SANITY_MODE": "production",
+    "SANITY_ALLOW_PRODUCTION_WRITES": "approved",
+    "SANITY_UPLOAD_RETEST_UNTIL": "0",
+    "ADMIN_QA_PRODUCT_ID": "",
+    "SESSION_TTL_SECONDS": "28800",
+  },
+}

@@ -1,0 +1,9 @@
+// Loopback-only native stream unit probes. Never deploy this test configuration.
+{
+  "name": "atelier-upload-local-probe",
+  "main": "upload-native-probe.mjs",
+  "compatibility_date": "2026-10-13",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false
+}

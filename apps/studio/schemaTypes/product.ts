@@ -83,10 +83,8 @@ export const product = defineType({
       title: "מידות",
       type: "array",
       group: "details",
-      of: [{type: "string"}],
-      options: {
-        list: ["XS", "S", "M", "L", "XL", "36", "38", "40", "42", "One size"]
-      }
+      // Match colors: custom admin values remain editable as ordinary strings.
+      of: [{type: "string"}]
     }),
     defineField({
       name: "colors",

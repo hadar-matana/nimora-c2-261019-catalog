@@ -1,0 +1,27 @@
+// Local instrumentation only. Never deploy either configuration.
+{
+  "name": "atelier-outer-verification",
+  "main": "index.ts",
+  "compatibility_date": "2026-10-13",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "assets": {
+    "directory": "../out",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "AUTH",
+        "class_name": "OwnerAuth",
+        "script_name": "atelier-auth-verification",
+      },
+    ],
+  },
+  "vars": {
+    "LOCAL_COMPAT_PROOF": "1",
+    "ADMIN_ORIGIN": "http://127.0.0.1:3002",
+  },
+}

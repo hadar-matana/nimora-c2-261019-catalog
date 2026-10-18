@@ -5,6 +5,10 @@
   "scripts": {
     "dev": "pnpm --filter storefront dev",
     "dev:studio": "pnpm --filter studio dev",
+    "dev:admin": "pnpm --filter admin dev",
+    "build:admin": "pnpm --filter admin build",
+    "lint:admin": "pnpm --filter admin lint",
+    "typecheck:admin": "pnpm --filter admin typecheck",
     "build": "pnpm --filter studio build && pnpm --filter storefront build",
     "build:storefront": "pnpm --filter storefront build",
     "build:studio": "pnpm --filter studio build",

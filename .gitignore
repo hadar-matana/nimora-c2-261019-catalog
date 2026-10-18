@@ -12,3 +12,5 @@ build
 *.tsbuildinfo
 .DS_Store
 .wrangler
+.dev.vars*
+.open-next
