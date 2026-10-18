@@ -1,3 +1,4 @@
+import {defaultSiteConfig} from "@/config/site";
 import {client} from "@/lib/sanity";
 import type {Category, Collection, GalleryImage, Product, SiteSettings} from "@/types/content";
 
@@ -49,9 +50,12 @@ const productProjection = `{
 }`;
 
 export async function getSiteSettings(): Promise<SiteSettings> {
-  return (
+  const settings = (
     (await client.fetch<SiteSettings | null>(
-      `*[_type == "siteSettings"][0]{
+      `*[_type == "siteSettings"] | order(_id asc)[0]{
+        aboutHeading,
+        aboutIntro,
+        aboutBody,
         displayName,
         description,
         logo ${imageProjection},
@@ -65,6 +69,11 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       }`
     )) ?? {}
   );
+  // Keep legacy demo metadata out of the brand experience without editing CMS data.
+  if (settings.description?.includes("קטלוג אופנה להמחשת")) {
+    return {...settings, description: defaultSiteConfig.description};
+  }
+  return settings;
 }
 
 export async function getAllCategories(): Promise<Category[]> {

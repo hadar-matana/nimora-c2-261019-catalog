@@ -115,12 +115,12 @@ export function ProductGallery({images, productName}: {images: SanityImage[]; pr
             {images.map((image, index) => (
               <button
                 type="button"
-                className={`gallery-dot h-2 w-2 rounded-full ${index === activeIndex ? "is-selected bg-[var(--ink)]" : "bg-[var(--stone)]"}`}
+                className={`gallery-dot tap inline-flex items-center justify-center ${index === activeIndex ? "is-selected" : ""}`}
                 key={image._key ?? image.asset?._id ?? index}
                 onClick={() => setActiveIndex(index)}
                 aria-label={`הצג תמונה ${index + 1}`}
                 aria-current={index === activeIndex}
-              />
+              ><span className={`h-1.5 w-1.5 rounded-full ${index === activeIndex ? "bg-[var(--ink)]" : "bg-[var(--stone)]"}`} /></button>
             ))}
           </div>
           <div className="hidden grid-cols-5 gap-3 md:grid">

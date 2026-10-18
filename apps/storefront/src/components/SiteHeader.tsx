@@ -5,7 +5,7 @@ import {createGeneralWhatsappHref, getContactLinks} from "@/lib/contact";
 import type {SiteSettings} from "@/types/content";
 
 export function SiteHeader({settings}: {settings: SiteSettings}) {
-  const displayName = defaultSiteConfig.displayName;
+  const displayName = settings.displayName?.trim() || defaultSiteConfig.displayName;
   const {instagramUrl, whatsappNumber} = getContactLinks(settings);
   const whatsappHref = whatsappNumber ? createGeneralWhatsappHref(whatsappNumber) : undefined;
 
@@ -36,14 +36,15 @@ export function SiteHeader({settings}: {settings: SiteSettings}) {
             </a>
           ) : null}
         </div>
-        <Link href="/" className="atelier-wordmark transition-opacity duration-200 hover:opacity-75" aria-label="ATELIER דף הבית">
+        <Link href="/" className="atelier-wordmark transition-opacity duration-200 hover:opacity-75" aria-label={`${displayName} דף הבית`}>
           {displayName}
         </Link>
-        <div className="flex justify-end text-sm font-semibold">
+        <nav aria-label="ניווט ראשי" className="store-navigation flex justify-end text-sm font-semibold">
           <Link className="tap nav-link inline-flex items-center px-1 text-[var(--ink)]" href="/catalog">
-            קטלוג
+            הקולקציה
           </Link>
-        </div>
+          <Link className="tap nav-link inline-flex items-center px-1" href="/about">אודות</Link>
+        </nav>
       </div>
     </header>
   );

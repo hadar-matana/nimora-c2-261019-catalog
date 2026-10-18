@@ -24,7 +24,7 @@ export async function generateMetadata({params}: ProductPageProps): Promise<Meta
 
   return {
     title: product.name,
-    description: product.description ?? `${product.name} בקטלוג האופנה`
+    description: product.description ?? `${product.name} בקולקציה`
   };
 }
 
@@ -44,20 +44,20 @@ export default async function ProductPage({params}: ProductPageProps) {
     <section className="container py-5 md:py-10">
       <Link href="/catalog" className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-[var(--muted)] md:mb-8">
         <ArrowRight size={18} />
-        חזרה לקטלוג
+        חזרה לקולקציה
       </Link>
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1.14fr)_minmax(360px,0.86fr)] lg:gap-16">
         <ProductGallery images={product.images} productName={product.name} />
 
-        <div className="lg:sticky lg:top-28 lg:self-start">
+        <div className="product-information lg:sticky lg:top-28 lg:self-start">
           <div className="border-b border-[var(--border)] pb-7">
             {context ? <p className="mb-4 text-sm text-[var(--muted)]">{context}</p> : null}
             <h1 className="text-3xl font-normal leading-tight md:text-5xl">{product.name}</h1>
             {showPrices && product.priceAgorot ? (
-              <p className="mt-4 text-xl font-semibold md:text-2xl">{formatPrice(product.priceAgorot, product.currency)}</p>
+              <p className="mt-4 text-xl font-normal md:text-2xl">{formatPrice(product.priceAgorot, product.currency)}</p>
             ) : null}
-            {product.description ? <p className="mt-6 text-lg leading-8 text-[var(--muted)]">{product.description}</p> : null}
+            {product.description ? <p className="mt-6 whitespace-pre-line text-base leading-8 text-[var(--muted)]">{product.description}</p> : null}
           </div>
 
           <ProductInquiryPanel product={product} settings={settings} />
@@ -72,7 +72,7 @@ export default async function ProductPage({params}: ProductPageProps) {
               <h2 className="text-3xl font-normal">פריטים קשורים</h2>
             </div>
             <Link href="/catalog" className="text-sm font-semibold underline underline-offset-4">
-              לקטלוג
+              לכל הפריטים
             </Link>
           </div>
           <div className="balanced-grid">

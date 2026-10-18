@@ -12,11 +12,11 @@ export function SiteFooter({settings}: {settings: SiteSettings}) {
     <footer className="mt-16 border-t border-[var(--border)] bg-white">
       <div className="container grid gap-8 py-8 md:grid-cols-[1fr_auto_1fr] md:items-center">
         <div>
-          <p className="atelier-wordmark text-[2rem] md:text-[2.6rem]">{defaultSiteConfig.displayName}</p>
+          <p className="atelier-wordmark text-[2rem] md:text-[2.6rem]">{settings.displayName?.trim() || defaultSiteConfig.displayName}</p>
         </div>
-        <p className="text-center text-sm text-[var(--muted)]">אופנה נשית. בכל יום מחדש.</p>
+        <Link href="/about" className="tap inline-flex items-center justify-center text-sm">אודות</Link>
         <div className="flex flex-wrap justify-start gap-4 text-sm font-semibold md:justify-end">
-          <Link href="/catalog">קטלוג</Link>
+          <Link href="/catalog">הקולקציה</Link>
           {instagramUrl ? (
             <a href={instagramUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 transition-opacity hover:opacity-65">
               <Instagram size={16} />

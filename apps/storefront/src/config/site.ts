@@ -1,6 +1,6 @@
 export const defaultSiteConfig = {
   displayName: "ATELIER",
-  description: "קטלוג אופנה מינימליסטי לפריטי בוטיק, מחירים ופניות WhatsApp.",
+  description: "גלו את הקולקציה ואת הפריטים שלנו.",
   baseUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://fashion-catalog-demo.pages.dev",
   studioUrl: process.env.NEXT_PUBLIC_STUDIO_URL ?? "https://fashion-catalog-demo.sanity.studio",
   instagramUrl: "",

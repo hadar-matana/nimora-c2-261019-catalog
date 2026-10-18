@@ -63,6 +63,9 @@ export type GalleryImage = {
 };
 
 export type SiteSettings = {
+  aboutHeading?: string;
+  aboutIntro?: string;
+  aboutBody?: string;
   displayName?: string;
   description?: string;
   logo?: SanityImage;

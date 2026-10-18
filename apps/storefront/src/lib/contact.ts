@@ -54,7 +54,7 @@ export function getContactLinks(settings: SiteSettings) {
 }
 
 export function createGeneralWhatsappHref(number: string) {
-  return createWhatsappHref(number, ["היי! אשמח לקבל פרטים על הקטלוג של ATELIER."]);
+  return createWhatsappHref(number, ["היי! אשמח לקבל פרטים על הקולקציה."]);
 }
 
 export function createProductWhatsappHref({
