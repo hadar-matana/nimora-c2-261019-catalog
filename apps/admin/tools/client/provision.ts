@@ -1,10 +1,14 @@
 import { createHmac } from "node:crypto";
 import {
+  AUTH_CLASS_NAME,
+  AUTH_BINDING_NAME,
   canonical,
   confirmTarget,
   digest,
   validateNewClient,
+  validateNamespaceObservation,
   type ClientManifest,
+  type NamespaceObservation,
 } from "./manifest.ts";
 
 export type Operation = {
@@ -114,8 +118,10 @@ export function configuration(m: ClientManifest) {
     workers_dev: false,
     preview_urls: false,
     assets: { directory: "../out", binding: "ASSETS", run_worker_first: true },
-    durable_objects: { bindings: [{ name: "AUTH", class_name: "OwnerAuth" }] },
-    migrations: [{ tag: "v1", new_sqlite_classes: ["OwnerAuth"] }],
+    durable_objects: {
+      bindings: [{ name: AUTH_BINDING_NAME, class_name: AUTH_CLASS_NAME }],
+    },
+    migrations: [{ tag: "v1", new_sqlite_classes: [AUTH_CLASS_NAME] }],
     vars: {
       LOCAL_COMPAT_PROOF: "0",
       ADMIN_REMOTE_ENABLED: "disabled",
@@ -260,6 +266,7 @@ export function verifyIsolationEvidence(
   const e = evidence as {
     manifestHash?: string;
     namespaceId?: string;
+    namespaceObservation?: unknown;
     cmsProject?: string;
     dataset?: string;
     pages?: string;
@@ -291,6 +298,7 @@ export function verifyIsolationEvidence(
     e.previewPolicy !== "disabled"
   )
     throw new Error("Observed targets do not match client manifest");
+  validateNamespaceObservation(m, e.namespaceObservation);
   if (
     e.hook &&
     (e.hook.projectId !== m.sanity.projectId ||
@@ -454,17 +462,13 @@ export async function bindObservedNamespace(
   next: ClientManifest,
   registry: unknown,
   journal: Journal,
-  observed: {
-    accountId: string;
-    workerName: string;
-    namespaceName: string;
-    namespaceId: string;
-  },
+  observed: NamespaceObservation,
   provider: Provider,
   confirmation: string,
 ) {
   validateNewClient(next, registry);
   confirmTarget(next, "bind-namespace", confirmation);
+  validateNamespaceObservation(next, observed);
   const expected = structuredClone(previous);
   expected.worker.namespaceId = next.worker.namespaceId;
   if (
@@ -481,6 +485,26 @@ export async function bindObservedNamespace(
       "Only an observed namespace assignment may rebind the manifest journal",
     );
   const operations = provisionPlan(next, registry).operations;
+  const bindingOperation = operations.find((op) => op.id === "binding")!;
+  for (const dependency of bindingOperation.requires)
+    if (
+      !journal.entries.some(
+        (entry) => entry.id === dependency && entry.status === "verified",
+      )
+    )
+      throw new Error(
+        "Verified admin deployment required before namespace assignment",
+      );
+  // A shaped observation is not proof of existence: independently reconcile the
+  // provider ID even when the caller supplies an apparently complete record.
+  const actualId = await provider.lookup(bindingOperation);
+  if (
+    actualId !== next.worker.namespaceId ||
+    !(await provider.verify(bindingOperation, actualId))
+  )
+    throw new Error(
+      "Namespace not independently observed and verified; no assignment allowed",
+    );
   for (const entry of journal.entries) {
     const op = operations.find((o) => o.id === entry.id);
     if (

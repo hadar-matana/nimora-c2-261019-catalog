@@ -27,7 +27,7 @@ export function client(
     worker: {
       name: slug + "-admin",
       adminOrigin: `https://admin.${slug}.invalid`,
-      namespaceName: slug + "-auth",
+      namespaceName: slug + "-admin_OwnerAuth",
       namespaceId: suffix.repeat(32),
     },
     studio: { name: slug + "-studio", appId: slug + "studio001" },
@@ -70,3 +70,19 @@ export const metadata = (m) => ({
   revision: m.revision,
 });
 export const sha1 = (b) => createHash("sha1").update(b).digest("hex");
+
+// Synthetic normalized provider inventory + Worker binding, never a live ID.
+export const namespaceObservation = (m) => ({
+  accountId: m.accounts.cloudflare,
+  workerName: m.worker.name,
+  namespaceName: m.worker.namespaceName,
+  namespaceId: m.worker.namespaceId,
+  scriptName: m.worker.name,
+  className: "OwnerAuth",
+  binding: {
+    name: "AUTH",
+    namespaceId: m.worker.namespaceId,
+    scriptName: m.worker.name,
+    className: "OwnerAuth",
+  },
+});

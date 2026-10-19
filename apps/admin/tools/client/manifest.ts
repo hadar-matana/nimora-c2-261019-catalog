@@ -9,6 +9,10 @@ import {
   cmsTarget,
 } from "../../../../packages/config/deployment.mjs";
 
+// This deployment implements one native AUTH class; arbitrary class names are not client input.
+export const AUTH_CLASS_NAME = "OwnerAuth";
+export const AUTH_BINDING_NAME = "AUTH";
+
 export type ClientManifest = {
   version: 1;
   slug: string;
@@ -203,7 +207,6 @@ export function validateManifest(input: unknown): ClientManifest {
   for (const [v, label] of [
     [pages.name, "Pages"],
     [worker.name, "Worker"],
-    [worker.namespaceName, "DO namespace"],
     [studio.name, "Studio"],
   ] as const) {
     const name = text(v, label, /^[a-z][a-z0-9-]{2,57}$/);
@@ -211,6 +214,14 @@ export function validateManifest(input: unknown): ClientManifest {
     if (!name.includes(slug))
       throw new Error(`${label}: name must contain client slug`);
   }
+  // Worker/Pages identifiers remain lowercase-hyphen names. The namespace label
+  // is the exact native Worker/class name, never a user-chosen logical alias.
+  const namespaceName = text(worker.namespaceName, "DO namespace");
+  noDemo(namespaceName);
+  if (namespaceName !== `${worker.name}_${AUTH_CLASS_NAME}`)
+    throw new Error(
+      "DO namespace must exactly match this Worker and OwnerAuth class",
+    );
   const domain = origin(pages.domain, "Client domain"),
     admin = origin(worker.adminOrigin, "Admin origin");
   noDemo(domain);
@@ -323,6 +334,67 @@ export function validateManifest(input: unknown): ClientManifest {
     throw new Error("Invalid retention policy; keep at least two backups");
   return structuredClone(input) as ClientManifest;
 }
+export type NamespaceObservation = {
+  accountId: string;
+  workerName: string;
+  namespaceName: string;
+  namespaceId: string;
+  scriptName: string;
+  className: string;
+  binding: {
+    name: string;
+    namespaceId: string;
+    scriptName: string;
+    className: string;
+  };
+};
+
+// Public, normalized GET observations from the namespace inventory and Worker
+// settings. A missing script_name on a local-class binding must be resolved by
+// the observer to the queried Worker; never infer ownership from the label alone.
+export function validateNamespaceObservation(
+  mInput: unknown,
+  input: unknown,
+): NamespaceObservation {
+  const m = validateManifest(mInput);
+  if (!m.worker.namespaceId)
+    throw new Error("Assigned observed namespace ID required");
+  const o = object(
+    input,
+    [
+      "accountId",
+      "workerName",
+      "namespaceName",
+      "namespaceId",
+      "scriptName",
+      "className",
+      "binding",
+    ],
+    "namespace observation",
+  );
+  const binding = object(
+    o.binding,
+    ["name", "namespaceId", "scriptName", "className"],
+    "namespace binding observation",
+  );
+  if (
+    o.accountId !== m.accounts.cloudflare ||
+    o.workerName !== m.worker.name ||
+    o.namespaceName !== m.worker.namespaceName ||
+    o.namespaceId !== m.worker.namespaceId ||
+    o.scriptName !== m.worker.name ||
+    o.className !== AUTH_CLASS_NAME ||
+    binding.name !== AUTH_BINDING_NAME ||
+    binding.namespaceId !== m.worker.namespaceId ||
+    binding.scriptName !== m.worker.name ||
+    binding.className !== AUTH_CLASS_NAME
+  )
+    throw new Error(
+      "Observed namespace inventory and AUTH binding must match the exact client account, ID, Worker/script and class",
+    );
+  return structuredClone(input) as NamespaceObservation;
+}
+
 export function validateRegistry(input: unknown): ClientManifest[] {
   if (!Array.isArray(input))
     throw new Error(

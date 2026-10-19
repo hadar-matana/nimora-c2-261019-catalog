@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { client } from "./helpers.mjs";
+import { client, namespaceObservation } from "./helpers.mjs";
 import {
   digest,
   validateManifest,
@@ -195,6 +195,7 @@ test("isolation attestation rejects reused credentials and cross-client hook/nam
   const evidence = {
     manifestHash: digest(m),
     namespaceId: m.worker.namespaceId,
+    namespaceObservation: namespaceObservation(m),
     cmsProject: m.sanity.projectId,
     dataset: m.sanity.dataset,
     pages: m.pages.name,
@@ -246,6 +247,9 @@ test("isolation attestation rejects reused credentials and cross-client hook/nam
   );
   for (const change of [
     (e) => (e.namespaceId = other.worker.namespaceId),
+    (e) => delete e.namespaceObservation,
+    (e) => (e.namespaceObservation.binding.className = "OtherAuth"),
+    (e) => (e.namespaceObservation.scriptName = other.worker.name),
     (e) => (e.hook.pagesProject = "fashion-catalog-demo"),
     (e) => (e.hook.destinationOrigin = "https://beta-store.pages.dev"),
     (e) => (e.otherCredentials[0].ownerPassword = e.credentials.ownerPassword),
@@ -408,23 +412,20 @@ test("provider-assigned namespace updates require exact observation, confirmatio
     manifestHash: digest(previous),
     entries: [
       { id: "identity", status: "verified", observed: "identity-evidence" },
+      { id: "cms", status: "verified", observed: "cms-evidence" },
+      { id: "admin", status: "verified", observed: "admin-evidence" },
     ],
   };
   let mutations = 0;
   const provider = {
-    lookup: async () => null,
+    lookup: async () => next.worker.namespaceId,
     create: async () => {
       mutations++;
       return "unexpected";
     },
     verify: async () => true,
   };
-  const observation = {
-    accountId: next.accounts.cloudflare,
-    workerName: next.worker.name,
-    namespaceName: next.worker.namespaceName,
-    namespaceId: next.worker.namespaceId,
-  };
+  const observation = namespaceObservation(next);
   const rebound = await bindObservedNamespace(
     previous,
     next,
