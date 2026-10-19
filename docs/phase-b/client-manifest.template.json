@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "slug": "REQUIRED_CLIENT_SLUG",
+  "kind": "client",
+  "revision": "REQUIRED_FULL_GIT_COMMIT_SHA",
+  "accounts": {
+    "cloudflare": "REQUIRED_PERSONAL_ACCOUNT_ID",
+    "sanityOrganization": "REQUIRED_ORGANIZATION_ID"
+  },
+  "sanity": {
+    "projectId": "REQUIRED_NEW_PROJECT_ID",
+    "dataset": "catalog",
+    "apiVersion": "2025-02-19"
+  },
+  "pages": {
+    "name": "REQUIRED_CLIENT_PAGES_NAME",
+    "domain": "https://REQUIRED_CLIENT_DOMAIN",
+    "previewPolicy": "disabled"
+  },
+  "worker": {
+    "name": "REQUIRED_CLIENT_WORKER_NAME",
+    "adminOrigin": "https://REQUIRED_CLIENT_ADMIN_HOST",
+    "namespaceName": "REQUIRED_CLIENT_NAMESPACE_NAME",
+    "namespaceId": null
+  },
+  "studio": {
+    "name": "REQUIRED_CLIENT_STUDIO_NAME",
+    "appId": "REQUIRED_STUDIO_APP_ID"
+  },
+  "git": {
+    "owner": "hadar-matana",
+    "repository": "REQUIRED_PERSONAL_SOURCE_REPOSITORY",
+    "branch": "client/REQUIRED_CLIENT_SLUG"
+  },
+  "brand": {
+    "displayName": "REQUIRED_INDEPENDENT_BRAND",
+    "description": "REQUIRED_CLIENT_DESCRIPTION",
+    "tagline": "REQUIRED_CLIENT_TAGLINE",
+    "accentColor": "#335544",
+    "accentContrastColor": "#ffffff",
+    "logoUrl": null
+  },
+  "publishing": {
+    "enabled": false,
+    "sanityProjectId": "REQUIRED_NEW_PROJECT_ID",
+    "dataset": "catalog",
+    "pagesProject": "REQUIRED_CLIENT_PAGES_NAME",
+    "hookId": null
+  },
+  "backup": {
+    "directory": "/REQUIRED_PRIVATE_BACKUP_DIRECTORY",
+    "keyId": "REQUIRED_ESCROW_KEY_IDENTIFIER",
+    "retentionDays": 30,
+    "keepLast": 7
+  }
+}

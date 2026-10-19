@@ -22,7 +22,9 @@
     "test:integration": "node tests/integration.mjs",
     "test:streaming": "DIRECT_WORKER_VERIFY=1 node tests/streaming.mjs",
     "test:config": "node tests/configuration.mjs && node tests/brand-render.mjs",
-    "test:contracts": "node tests/about.mjs && node tests/about-render.mjs && node tests/catalog-options.mjs && node tests/integration-guards.mjs"
+    "test:contracts": "node tests/about.mjs && node tests/about-render.mjs && node tests/catalog-options.mjs && node tests/integration-guards.mjs",
+    "client-ops": "node --experimental-strip-types tools/client/cli.ts",
+    "test:client": "node --experimental-strip-types --test tests/client/*.test.mjs"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

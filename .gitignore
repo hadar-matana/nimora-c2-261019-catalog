@@ -19,3 +19,8 @@ build
 .env.*
 !.env.example
 wrangler.client.local.jsonc
+
+# Encrypted client backups and local operator workspace are never source files
+*.abk
+.client-ops/
+__pycache__/

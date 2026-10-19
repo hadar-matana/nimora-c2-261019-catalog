@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const root = fileURLToPath(new URL("../../../", import.meta.url));
-const shots = path.join(root, "docs/phase-a/admin-screenshots");
+const shots = process.env.ADMIN_TEST_SHOTS || path.join(root, "docs/phase-a/admin-screenshots");
 await mkdir(shots, { recursive: true });
 const browser = await chromium.launch({
   headless: true,

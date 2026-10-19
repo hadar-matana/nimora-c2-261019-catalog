@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-19T07:50:50.941Z",
+  "methods": [
+    "GET"
+  ],
+  "cloudflareAuthenticatedCheck": "HTTP 403; not refreshed",
+  "sanity": {
+    "sanityProjectHash": "unchanged",
+    "sanityDatasetHash": "unchanged",
+    "sanityHooksHash": "unchanged",
+    "documents": "unchanged",
+    "count": 73
+  },
+  "publicStorefront": {
+    "/": "byte-identical to approved immutable deployment",
+    "/about/": "byte-identical to approved immutable deployment",
+    "/catalog/": "byte-identical to approved immutable deployment",
+    "/gallery/": "byte-identical to approved immutable deployment"
+  },
+  "admin": {
+    "loginStatus": 200,
+    "limitation": "Reachability only; current Worker version unavailable without authorized Cloudflare API"
+  },
+  "scope": "local preparation only",
+  "newClientTests": {
+    "passed": 15,
+    "failed": 0,
+    "durationMs": 1283.724625
+  },
+  "existingAuthTests": {
+    "passed": 4,
+    "failed": 0
+  },
+  "dryRun": {
+    "operations": 9,
+    "cloudMutations": 0,
+    "writesEnabled": false,
+    "automaticPreviews": "disabled"
+  },
+  "builds": {
+    "admin": "passed",
+    "storefront": "passed; 21 routes",
+    "studio": "passed"
+  },
+  "lintAndTypes": "passed: storefront, Studio, admin and Worker types",
+  "privateBrowserSentinelsFound": false,
+  "preexistingUntrackedFilesPreserved": 212,
+  "originalReadinessAudit": "unavailable; not reconstructed",
+  "engineeringActiveTime": "not instrumented",
+  "stagedCredentialScan": "passed; explicit Phase B files only; no environment/key/archive files or known private credentials"
+}
