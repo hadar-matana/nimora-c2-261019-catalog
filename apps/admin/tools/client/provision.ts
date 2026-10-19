@@ -411,15 +411,27 @@ export function hookObservation(
     throw new Error(
       "Hook observations must match this client and start disabled",
     );
-  const url = new URL(pages.url);
+  let url: URL;
+  try {
+    url = new URL(pages.url);
+  } catch {
+    // Never attach the input/capability URL to errors or logs.
+    throw new Error("Invalid private Pages deploy-hook URL");
+  }
+  // id is normalized from the provider record's hook_id; ownership/branch
+  // come from independently observed metadata, never from the capability URL.
+  const expectedUrl = `https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/${pages.id}`;
   if (
     url.origin !== "https://api.cloudflare.com" ||
     url.username ||
     url.password ||
     url.search ||
     url.hash ||
-    url.pathname !== `/client/v4/pages/webhooks/${pages.id}` ||
-    !/^[a-f0-9-]{32,36}$/.test(pages.id)
+    url.pathname !== `/client/v4/pages/webhooks/deploy_hooks/${pages.id}` ||
+    pages.url !== expectedUrl ||
+    !/^(?:[a-f0-9]{32}|[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12})$/.test(
+      pages.id,
+    )
   )
     throw new Error("Invalid private Pages deploy-hook URL");
   const fingerprint = createHmac("sha256", auditKey)

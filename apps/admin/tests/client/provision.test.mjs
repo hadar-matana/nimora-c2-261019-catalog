@@ -285,8 +285,9 @@ test("credential equality uses private-key HMAC of actual secret values, not dif
 test("native publishing hook observations bind the private Cloudflare hook URL to the correct account, project and branch without logging it", () => {
   const m = client(),
     key = Buffer.alloc(32, 9),
-    id = "1".repeat(32),
-    url = "https://api.cloudflare.com/client/v4/pages/webhooks/" + id;
+    id = "11111111-2222-4333-8444-555555555555",
+    url =
+      "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/" + id;
   const sanity = {
     projectId: m.sanity.projectId,
     dataset: m.sanity.dataset,
@@ -307,22 +308,95 @@ test("native publishing hook observations bind the private Cloudflare hook URL t
     result.sanityDestinationFingerprint,
   );
   assert.ok(!JSON.stringify(result).includes(id));
-  assert.throws(() =>
+  for (const changes of [
+    { accountId: "e".repeat(32) },
+    { project: "fashion-catalog-demo" },
+    { branch: "main" },
+    { id: "22222222-2222-4333-8444-555555555555" },
+  ])
+    assert.throws(() =>
+      hookObservation(m, sanity, { ...pages, ...changes }, key),
+    );
+  for (const changes of [
+    { projectId: "3ahm0828" },
+    { dataset: "other" },
+    { url: url + "0" },
+    { isDisabled: false },
+    { filter: "true" },
+  ])
+    assert.throws(() =>
+      hookObservation(m, { ...sanity, ...changes }, pages, key),
+    );
+  assert.throws(() => hookObservation(m, sanity, pages, Buffer.alloc(31)));
+
+  // Use only synthetic capability IDs. Never print a rejected private URL.
+  for (const rejected of [
+    url.replace("https:", "http:"),
+    url.replace("api.cloudflare.com", "api.cloudflare.com.evil.invalid"),
+    url.replace("api.cloudflare.com", "evil.invalid"),
+    url.replace("api.cloudflare.com", "user:pass@api.cloudflare.com"),
+    url.replace("api.cloudflare.com", "api.cloudflare.com:444"),
+    url.replace("api.cloudflare.com", "api.cloudflare.com:443"),
+    url.replace("/deploy_hooks/", "/"),
+    url.replace("/deploy_hooks/", "/unrelated/"),
+    url.replace("/deploy_hooks/", "/%64eploy_hooks/"),
+    url.replace("/deploy_hooks/", "/other/../deploy_hooks/"),
+    url.replace("/deploy_hooks/", "/deploy_hooks//"),
+    url.replace("/deploy_hooks/", "/deploy_hooks/../"),
+    url + "/",
+    url + "/extra",
+    url + "?token=synthetic",
+    url + "#fragment",
+    url + "?",
+    url + "#",
+    " " + url,
+    url + "\n",
+    "not-a-url",
+    "//api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/" + id,
+  ]) {
+    assert.throws(
+      () =>
+        hookObservation(
+          m,
+          { ...sanity, url: rejected },
+          { ...pages, url: rejected },
+          key,
+        ),
+      (error) =>
+        error.message === "Invalid private Pages deploy-hook URL" &&
+        !error.message.includes(id),
+    );
+  }
+  for (const invalidId of [
+    "-".repeat(32),
+    "1".repeat(31),
+    "1".repeat(33),
+    id.toUpperCase().replace("1", "A"),
+    "1111-" + "2".repeat(27),
+  ]) {
+    const invalidUrl =
+      "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/" +
+      invalidId;
+    assert.throws(() =>
+      hookObservation(
+        m,
+        { ...sanity, url: invalidUrl },
+        { ...pages, id: invalidId, url: invalidUrl },
+        key,
+      ),
+    );
+  }
+  const compactId = "1".repeat(32);
+  const compactUrl =
+    "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/" +
+    compactId;
+  assert.ok(
     hookObservation(
       m,
-      sanity,
-      { ...pages, project: "fashion-catalog-demo" },
+      { ...sanity, url: compactUrl },
+      { ...pages, id: compactId, url: compactUrl },
       key,
     ),
-  );
-  assert.throws(() =>
-    hookObservation(m, sanity, { ...pages, branch: "main" }, key),
-  );
-  assert.throws(() =>
-    hookObservation(m, { ...sanity, url: url + "0" }, pages, key),
-  );
-  assert.throws(() =>
-    hookObservation(m, { ...sanity, isDisabled: false }, pages, key),
   );
 });
 
