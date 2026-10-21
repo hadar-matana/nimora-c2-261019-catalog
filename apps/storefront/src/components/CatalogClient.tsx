@@ -44,7 +44,7 @@ export function CatalogClient({
         </div>
       ) : (
         <div className="flex min-h-64 flex-col items-center justify-center border border-dashed border-[var(--border)] bg-white/50 p-8 text-center">
-          <h2 className="text-2xl font-light">אין פריטים בקטגוריה הזו</h2>
+          <h2 className="text-2xl font-light">{products.length ? "אין פריטים בקטגוריה הזו" : "הקולקציה תעלה בקרוב"}</h2>
           <button type="button" className="tap mt-3 text-sm font-semibold underline underline-offset-4" onClick={() => setCategory("all")}>
             חזרה לכל הפריטים
           </button>

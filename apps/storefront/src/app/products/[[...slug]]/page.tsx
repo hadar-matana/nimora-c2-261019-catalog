@@ -9,16 +9,26 @@ import {formatPrice} from "@/lib/format";
 import {getProductBySlug, getProductSlugs, getRelatedProducts, getSiteSettings} from "@/lib/queries";
 
 type ProductPageProps = {
-  params: Promise<{slug: string}>;
+  params: Promise<{slug?: string[]}>;
 };
 
 export async function generateStaticParams() {
   const slugs = await getProductSlugs();
-  return slugs.map((slug) => ({slug}));
+  // Next 16.4 static export rejects []. The optional base path is a real 404,
+  // not a placeholder product; existing /products/<slug> URLs stay unchanged.
+  return slugs.length ? slugs.map((slug) => ({slug: [slug]})) : [{slug: []}];
+}
+
+export const dynamicParams = false;
+
+async function productSlug(params: ProductPageProps["params"]) {
+  const {slug} = await params;
+  if (!slug || slug.length !== 1) notFound();
+  return slug[0];
 }
 
 export async function generateMetadata({params}: ProductPageProps): Promise<Metadata> {
-  const {slug} = await params;
+  const slug = await productSlug(params);
   const product = await getProductBySlug(slug);
   if (!product) return {};
 
@@ -29,7 +39,7 @@ export async function generateMetadata({params}: ProductPageProps): Promise<Meta
 }
 
 export default async function ProductPage({params}: ProductPageProps) {
-  const {slug} = await params;
+  const slug = await productSlug(params);
   const [product, settings] = await Promise.all([getProductBySlug(slug), getSiteSettings()]);
 
   if (!product) {
