@@ -1,0 +1,184 @@
+{
+  "planningOnly": true,
+  "cloudMutationsAuthorized": false,
+  "status": "NO-GO until listed preflight gates and explicit approval",
+  "candidateSourceRevision": "d4277cfc0f5c6de7e1b1527fe07add16198e6062",
+  "revisionGate": "Approved executable source is d4277cfc0f5c6de7e1b1527fe07add16198e6062; later documentation-only commit does not repin deployment source.",
+  "fictionalBrand": "NIMORA C2 — Fictional Fashion Lab",
+  "clientIdentifier": "SIM-NIMORA-20261019",
+  "accounts": {
+    "cloudflare": "07eb45a2b5a037d1138beea811cf549b",
+    "sanityOrganization": "ovea9a4hm",
+    "githubOwner": "hadar-matana"
+  },
+  "sourceRepositoryToCreate": {
+    "name": "nimora-c2-261019-catalog",
+    "visibility": "public",
+    "reason": "Isolate future client pushes from existing demo Git integration",
+    "revision": "d4277cfc0f5c6de7e1b1527fe07add16198e6062"
+  },
+  "primary": {
+    "sanityDisplayName": "NIMORA C2 Simulation",
+    "studioHostname": "nimora-c2-261019-studio.sanity.studio",
+    "manifest": {
+      "version": 1,
+      "slug": "nimora-c2-261019",
+      "kind": "client",
+      "revision": "d4277cfc0f5c6de7e1b1527fe07add16198e6062",
+      "accounts": {
+        "cloudflare": "07eb45a2b5a037d1138beea811cf549b",
+        "sanityOrganization": "ovea9a4hm"
+      },
+      "sanity": {
+        "projectId": null,
+        "dataset": "catalog",
+        "apiVersion": "2025-02-19"
+      },
+      "pages": {
+        "name": "nimora-c2-261019-store",
+        "domain": "https://nimora-c2-261019-store.pages.dev",
+        "previewPolicy": "disabled"
+      },
+      "worker": {
+        "name": "nimora-c2-261019-admin",
+        "adminOrigin": "https://nimora-c2-261019-admin.hadarmat.workers.dev",
+        "namespaceName": "nimora-c2-261019-admin_OwnerAuth",
+        "namespaceId": null
+      },
+      "studio": {
+        "name": "nimora-c2-261019-studio",
+        "appId": null
+      },
+      "git": {
+        "owner": "hadar-matana",
+        "repository": "nimora-c2-261019-catalog",
+        "branch": "client/nimora-c2-261019"
+      },
+      "brand": {
+        "displayName": "NIMORA C2 — Fictional Fashion Lab",
+        "description": "מותג אופנה בדיוני לצורכי בדיקת המערכת בלבד. אין מכירה אמיתית.",
+        "tagline": "אופנה בדיונית, בדיקה אמיתית",
+        "accentColor": "#355b62",
+        "accentContrastColor": "#ffffff",
+        "logoUrl": null
+      },
+      "publishing": {
+        "enabled": false,
+        "sanityProjectId": null,
+        "dataset": "catalog",
+        "pagesProject": "nimora-c2-261019-store",
+        "hookId": null
+      },
+      "backup": {
+        "directory": "/Users/hadarmatana/Library/Application Support/ATELIER/client-backups/nimora-c2-261019",
+        "keyId": "nimora-c2-261019-backup-v1",
+        "retentionDays": 30,
+        "keepLast": 2
+      }
+    },
+    "pagesHookName": "nimora-c2-261019-publish",
+    "sanityHookName": "nimora-c2-261019-published-to-pages"
+  },
+  "recovery": {
+    "sanityDisplayName": "NIMORA C2 Recovery",
+    "studioHostname": "nimora-r1-261019-studio.sanity.studio",
+    "manifest": {
+      "version": 1,
+      "slug": "nimora-r1-261019",
+      "kind": "client",
+      "revision": "d4277cfc0f5c6de7e1b1527fe07add16198e6062",
+      "accounts": {
+        "cloudflare": "07eb45a2b5a037d1138beea811cf549b",
+        "sanityOrganization": "ovea9a4hm"
+      },
+      "sanity": {
+        "projectId": null,
+        "dataset": "catalog",
+        "apiVersion": "2025-02-19"
+      },
+      "pages": {
+        "name": "nimora-r1-261019-store",
+        "domain": "https://nimora-r1-261019-store.pages.dev",
+        "previewPolicy": "disabled"
+      },
+      "worker": {
+        "name": "nimora-r1-261019-admin",
+        "adminOrigin": "https://nimora-r1-261019-admin.hadarmat.workers.dev",
+        "namespaceName": "nimora-r1-261019-admin_OwnerAuth",
+        "namespaceId": null
+      },
+      "studio": {
+        "name": "nimora-r1-261019-studio",
+        "appId": null
+      },
+      "git": {
+        "owner": "hadar-matana",
+        "repository": "nimora-c2-261019-catalog",
+        "branch": "client/nimora-r1-261019"
+      },
+      "brand": {
+        "displayName": "NIMORA C2 Recovery — Fictional Lab",
+        "description": "מותג אופנה בדיוני לצורכי בדיקת המערכת בלבד. אין מכירה אמיתית.",
+        "tagline": "אופנה בדיונית, בדיקה אמיתית",
+        "accentColor": "#355b62",
+        "accentContrastColor": "#ffffff",
+        "logoUrl": null
+      },
+      "publishing": {
+        "enabled": false,
+        "sanityProjectId": null,
+        "dataset": "catalog",
+        "pagesProject": "nimora-r1-261019-store",
+        "hookId": null
+      },
+      "backup": {
+        "directory": "/Users/hadarmatana/Library/Application Support/ATELIER/client-backups/nimora-r1-261019",
+        "keyId": "nimora-r1-261019-backup-v1",
+        "retentionDays": 30,
+        "keepLast": 2
+      }
+    },
+    "pagesHookName": null,
+    "sanityHookName": null,
+    "purpose": "Independent native restore and live cross-tenant auth/target checks; all writes/hooks initially disabled"
+  },
+  "assignedIdsStillRequired": [
+    "primary.sanity.projectId",
+    "primary.studio.appId",
+    "primary.worker.namespaceId",
+    "recovery.sanity.projectId",
+    "recovery.studio.appId",
+    "recovery.worker.namespaceId",
+    "primary publishing hook IDs after separate approval"
+  ],
+  "notAnExecutableManifest": "Null provider-assigned Sanity project/Studio app IDs intentionally fail validation; null namespace IDs cannot bind. Synthetic test IDs exist only in memory, never in this proposal.",
+  "backupOffsite": {
+    "proposal": "Existing operator-owned encrypted removable medium held separately/offsite; no new cloud backup account",
+    "path": null,
+    "capacityRequiredGiB": 10,
+    "existingOwnershipAndCapacityVerified": false,
+    "keyRecovery": "Existing operator-approved password manager plus independent recovery access; never on archive medium",
+    "managerAndRecoveryCustodianConfirmed": false
+  },
+  "imagePlan": {
+    "acceptedOriginals": 400,
+    "viewsPerProduct": ["front", "back", "fabric-detail", "flat-lay"],
+    "source": "New generated assets only; no demo or third-party references",
+    "proposedProvider": "BFL FLUX1.1 pro Playground, subject to operator account/terms/price approval",
+    "unitPriceUsdPublicReference": 0.04,
+    "maximumAttempts": 480,
+    "estimatedUsageUsd": {
+      "minimum": 16.0,
+      "with80Retakes": 19.2
+    },
+    "proposedCashCapUsdIncludingTaxAndTopup": 25,
+    "accountCreditsAndMinimumPurchaseVerified": false,
+    "imagesGenerated": 0
+  },
+  "namespaceContract": {
+    "status": "resolved in approved source",
+    "nativeName": "exact worker.name + _OwnerAuth; logical aliases forbidden",
+    "observation": "Account, Worker/script, native namespace name/ID, OwnerAuth class and AUTH binding must match; independent provider lookup/verify required after verified admin deployment; reverify prior journal entries.",
+    "pendingIds": "No provider ID generated or inferred; null IDs cannot bind or prove provisioned resources."
+  }
+}

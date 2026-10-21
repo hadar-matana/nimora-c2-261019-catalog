@@ -1,0 +1,161 @@
+{
+  "readOnly": true,
+  "source": {
+    "branch": "codex/c1-native-namespace-contract",
+    "localAndRemoteHead": "d4277cfc0f5c6de7e1b1527fe07add16198e6062",
+    "main": "e33d95253f249ba401c9affb70716dab0a812f2a",
+    "remote": "git@github-personal:hadar-matana/fashion-catalog-demo.git",
+    "note": "Approved executable source; subsequent documentation commit is not a new runtime approval."
+  },
+  "apiInventory": {
+    "at": "2026-10-19T08:32:55.713Z",
+    "methods": ["GET"],
+    "account": "07eb45a2b5a037d1138beea811cf549b",
+    "pages": [
+      {
+        "name": "fashion-catalog-demo",
+        "productionBranch": "main",
+        "productionCommit": "e33d95253f249ba401c9affb70716dab0a812f2a"
+      }
+    ],
+    "workers": [
+      {
+        "name": "atelier-admin",
+        "modifiedOn": "2026-10-18T10:48:11.399588Z"
+      }
+    ],
+    "namespaces": [
+      {
+        "id": "c0793f56356f4f1c8935e181e5d4d4ea",
+        "name": "atelier-admin_OwnerAuth",
+        "script": "atelier-admin",
+        "class": "OwnerAuth"
+      }
+    ],
+    "currentMonthDeploymentRecords": 25,
+    "deploymentRecordCaveat": "Deployment history count is not a verified billing quota counter",
+    "sanityProjects": [
+      {
+        "id": "3ahm0828",
+        "name": "Fashion Catalog Demo",
+        "organizationId": "ovea9a4hm",
+        "memberCount": 3
+      }
+    ]
+  },
+  "cloudflareDashboard": {
+    "accountName": "Hadarmat@gmail.com's Account",
+    "workersPlan": "Free; $0",
+    "workerRequestsToday": 5,
+    "workerRequestsDailyLimit": 100000,
+    "workerCpuLimitMs": 10,
+    "workersExisting": 1,
+    "workersFreeLimit": 100,
+    "workersBuildMinutesUsed": 0,
+    "workersBuildMinutesIncludedMonthly": 3000,
+    "doRequestsToday": 1,
+    "doGbSecondsToday": 0.004,
+    "doSqlStoredBytesApprox": 16380,
+    "doSqlRowsReadToday": 0,
+    "doSqlRowsWrittenToday": 0,
+    "pagesBuildsRemaining": "not exposed/verified; deployment count is not a billing counter"
+  },
+  "sanityDashboard": {
+    "organizationId": "ovea9a4hm",
+    "organizationName": "Hadar Personal Projects",
+    "project": "3ahm0828",
+    "projectCount": 1,
+    "numericOrganizationProjectCreationLimit": "not exposed/verified",
+    "currentProjectPlan": "Growth Trial",
+    "trialDaysRemainingDisplayed": 25,
+    "currentPlanPriceUsd": 0,
+    "trialEndBehavior": "Automatic Free downgrade unless explicitly upgraded",
+    "organizationBillingSummary": "No billing data available; not a verified paid invoice",
+    "usageCountersUpdated": "daily; values rounded in dashboard",
+    "apiCdnRequests": 0,
+    "apiCdnMonthlyQuota": 1000000,
+    "apiRequestsApprox": 1600,
+    "apiMonthlyQuota": 250000,
+    "bandwidthBytesApprox": 112600000,
+    "bandwidthMonthlyQuotaBytes": 100000000000,
+    "assetBytesApprox": 18200000,
+    "assetQuotaBytes": 100000000000,
+    "datasetsUsed": 1,
+    "datasetsIncluded": 2,
+    "countedDocuments": 37,
+    "documentQuota": 10000,
+    "webhooksUsed": 1,
+    "webhooksIncluded": 2,
+    "humanSeatsUsed": 1,
+    "humanSeatsIncluded": 20,
+    "newProjectEntitlements": "not provisioned; must independently confirm Free at bootstrap",
+    "memberCountNote": "API inventory may include robot members; human seat count is the dashboard value 1/20, not API members.length."
+  },
+  "securityNotes": [
+    "Free robot editor/viewer/deploy-studio role support verified in official Projects API documentation; human roles are a separate entitlement",
+    "Native namespace contract resolved in d4277cf; exact Worker_OwnerAuth with independently verified AUTH binding required."
+  ],
+  "externalMutationsExecuted": 0,
+  "resourcesCreated": 0,
+  "credentialsCreatedOrRefreshed": 0,
+  "proposalFileSha256": "3b722abd6143dfac1773954aecc1f82c17454eee1dc52cc0f324ef4393a836e6",
+  "localPlanningChecks": {
+    "products": 100,
+    "distinctImageSlots": 400,
+    "publishedEntities": 80,
+    "draftOnlyEntities": 20,
+    "publishedEntitiesWithPendingDrafts": 10,
+    "orderedChecklistSteps": 24,
+    "preexistingEvidenceFilesPreserved": 212
+  },
+  "historicalCheckedUtc": "2026-10-19T08:32:55.713Z",
+  "packageAlignedDate": "2026-10-21",
+  "currentReadChecks": {
+    "cloudflareExistingCredentialGet": "HTTP 401; no refresh/change attempted",
+    "pagesRemainingBuilds": "unverified",
+    "sanityNewProjectFreeEligibility": "unverified; no project created",
+    "sanityOrganizationCreationCap": "unverified",
+    "publicPricingRecheckedDate": "2026-10-21",
+    "historicalDashboardValues": "All dashboard counters below are 2026-10-19 observations, not current available capacity."
+  },
+  "mutationScopeNote": "Provider checks are read-only. Separately authorized Git documentation commit/push may automatically trigger a demo preview.",
+  "dryRun": {
+    "checkedUtc": "2026-10-21T10:38:56.402Z",
+    "sourceRevision": "d4277cfc0f5c6de7e1b1527fe07add16198e6062",
+    "syntheticOnly": true,
+    "syntheticIdsPersistedToProposal": false,
+    "stacksPassed": 2,
+    "negativeChecksPassed": 21,
+    "cloudCalls": 0,
+    "resourceCreates": 0,
+    "checks": [
+      "actual proposal clones validate with in-memory synthetic project/app/namespace observations",
+      "two-client registry and dry-run pass",
+      "null project/app/namespace and absent provider lookup rejected",
+      "wrong account/script/class/AUTH/demo/alias/duplicate rejected"
+    ],
+    "liveProof": false
+  },
+  "namespaceRegression": {
+    "groupsPassed": 5,
+    "failed": 0
+  },
+  "currentDashboardChecks": {
+    "date": "2026-10-21",
+    "cloudflareAccount": "07eb45a2b5a037d1138beea811cf549b / Hadarmat@gmail.com",
+    "pagesProjects": ["fashion-catalog-demo"],
+    "workers": ["atelier-admin"],
+    "pagesProductionCommit": "e33d95253f249ba401c9affb70716dab0a812f2a",
+    "productionDeployment": "1c7661d6-af46-44fd-ae3d-d82875babe8f",
+    "sanityOrganization": "ovea9a4hm / Hadar Personal Projects",
+    "sanityVisibleProjects": [
+      {
+        "id": "3ahm0828",
+        "plan": "Growth Trial"
+      }
+    ],
+    "pagesRemainingBuildMeter": "not observed",
+    "newSanityFreeEligibility": "unverified",
+    "workersPlan": "Free $0; 100 Workers, 100000 requests/day, 10 ms CPU; DO SQLite Free limits displayed"
+  }
+}
