@@ -18,8 +18,9 @@ import { readOptions, changeOption } from "./catalog-options";
 import { uploadImage } from "./uploads";
 import { allowedHost } from "./access";
 import { sessionLifetime } from "./session-policy";
+import {PublishingQueue, publishingTarget, type PublishingEnv} from './publishing';
 
-type Env = SanityEnv & {
+type Env = SanityEnv & PublishingEnv & {
   ASSETS: Fetcher;
   AUTH: DurableObjectNamespace;
   LOCAL_COMPAT_PROOF: string;
@@ -32,6 +33,7 @@ type Env = SanityEnv & {
   LOCAL_SESSION_TTL_MS?: string;
   SESSION_TTL_SECONDS?: string;
   ADMIN_QA_PRODUCT_ID?: string;
+  ADMIN_CONTENT_SCOPE?: string;
 };
 type Session = { expires: number; csrf: string; version: string };
 const cookie = "__Host-atelier_session";
@@ -51,7 +53,8 @@ async function digest(token: string) {
   ).join("");
 }
 
-// This one local SQLite-backed DO contains security records only, never products.
+// Named instances separate owner security records from publication queue state.
+// Neither stores product content or CMS credentials.
 export class OwnerAuth implements DurableObject {
   private metrics = { verifications: 0, verificationElapsedMs: 0 };
   constructor(
@@ -59,6 +62,7 @@ export class OwnerAuth implements DurableObject {
     private env: Env,
   ) {}
   async alarm() {
+    if(await this.state.storage.get('publication'))return new PublishingQueue(this.state,this.env).alarm();
     const now = Date.now();
     for (const prefix of ["session:", "rate:"]) {
       const rows = await this.state.storage.list<{
@@ -74,6 +78,7 @@ export class OwnerAuth implements DurableObject {
   }
   async fetch(request: Request) {
     const path = new URL(request.url).pathname;
+    if(path.startsWith('/publication/'))return new PublishingQueue(this.state,this.env).fetch(request);
     const input = (await request.json()) as {
       username?: string;
       password?: string;
@@ -228,6 +233,9 @@ app.use("*", async (c, next) => {
 // Read-only Stage 1 rejects mutations before parsing images/JSON or contacting
 // Sanity. Authentication and CSRF checks above still apply to these requests.
 app.use("/api/*", async (c, next) => {
+  if(c.env.ADMIN_CONTENT_SCOPE==='products' && !['GET','HEAD'].includes(c.req.method) &&
+    !/^\/api\/(products\/[^/]+|uploads|publishing\/retry|login|logout)$/.test(c.req.path))
+    return c.json({error:'הפעולה אינה מורשית בסביבת המוצרים.'},403);
   // Temporary controlled activation: owner authentication and CSRF have already
   // passed. Reject every other content write before parsing or contacting Sanity.
   if (c.env.ADMIN_QA_PRODUCT_ID && !["GET", "HEAD"].includes(c.req.method)) {
@@ -327,19 +335,35 @@ app.post("/api/catalog-options", async (c) => c.json(await changeOption(c.env, a
 app.get("/api/catalog", async (c) =>
   c.json(catalogView(await catalog(c.env), c.env)),
 );
+function publisher(env:Env,path:string){
+  return env.AUTH.get(env.AUTH.idFromName('storefront-publishing')).fetch(new Request('https://publishing.local/publication/'+path,{method:'POST'}));
+}
+app.get('/api/publishing',async c=>{
+  if(c.env.PUBLISHING_ENABLED!=='approved')return c.json({phase:'disabled'});
+  return publisher(c.env,'status');
+});
+app.post('/api/publishing/retry',async c=>publisher(c.env,'retry'));
 app.get("/api/products/:id/preview", async (c) =>
   c.json(view(await catalog(c.env), id(c.req.param("id")))),
 );
 app.post("/api/products/:id", async (c) => {
   const input = await body(c.req.raw);
-  return c.json(
-    await saveProduct(
+  const publishing=c.env.PUBLISHING_ENABLED==='approved' && ['publish','unpublish'].includes(String(input.action));
+  if(publishing){
+    publishingTarget(c.env);
+    const prepared=await publisher(c.env,'prepare');
+    if(!prepared.ok)throw new ApiError(503,'הפרסום אינו זמין כעת. השינוי לא נשמר.');
+  }
+  const result=await saveProduct(
       c.env,
       id(c.req.param("id")),
       input.product as Record<string, unknown>,
       input.action,
-    ),
-  );
+    );
+  // The durable prepare survives a disconnect after the CMS transaction. Never
+  // report a committed CMS change as a failed save if notification is interrupted.
+  if(publishing)c.executionCtx.waitUntil(publisher(c.env,'commit').then(()=>{}).catch(()=>{}));
+  return c.json({...result,publishing:publishing?'queued':'unchanged'});
 });
 app.post("/api/categories", async (c) =>
   c.json(await saveCategories(c.env, (await body(c.req.raw)).categories)),

@@ -1,5 +1,6 @@
 "use client";
 import {Brand} from "@/components/Brand";
+import {PublishingStatus} from './PublishingStatus';
 
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
@@ -121,7 +122,7 @@ export function Shell({ children }: { children: ReactNode }) {
         </div>
       </aside>
       <main className="workspace">
-        <div className="demo-banner">
+        {process.env.NEXT_PUBLIC_ADMIN_DEPLOYMENT_KIND !== 'client' && <div className="demo-banner">
           <span className="demo-dot" />
           {process.env.NEXT_PUBLIC_ADMIN_LOCAL_PROOF === "1"
             ? "סביבת בדיקה מקומית · הנתונים דרך שרת מאובטח"
@@ -129,7 +130,8 @@ export function Shell({ children }: { children: ReactNode }) {
           <span className="demo-label" dir="ltr">
             UI PREVIEW
           </span>
-        </div>
+        </div>}
+        <PublishingStatus />
         {children}
         <footer className="workspace-footer">
           <span dir="ltr"><Brand /></span>

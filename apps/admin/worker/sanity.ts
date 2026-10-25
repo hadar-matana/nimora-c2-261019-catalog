@@ -148,7 +148,7 @@ export async function mutate(env: SanityEnv, mutations: unknown[]) {
 export async function catalog(env: SanityEnv): Promise<Catalog> {
   const result = await query<Catalog>(
     env,
-    '{"products":*[_type=="product" && !(_id in path("versions.**"))][0...2001],"categories":*[_type=="category" && !(_id in path("drafts.**"))]|order(sortOrder asc)[0...201],"assets":*[_type=="sanity.imageAsset"][0...10001]}',
+    '{"products":*[_type=="product" && !(_id in path("versions.**"))][0...2001],"categories":*[_type=="category" && !(_id in path("drafts.**"))]|order(sortOrder asc)[0...201],"assets":*[_type=="sanity.imageAsset"][0...10001]{_id,_type,_rev,_updatedAt,url}}',
   );
   if (
     !Array.isArray(result.products) ||
