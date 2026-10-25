@@ -13,7 +13,9 @@ Git deployments and branch previews can remain disabled.
 
 Published saves/unpublishing prepare durable work before the CMS transaction.
 A separate named instance in the existing AUTH namespace debounces requests and
-serializes builds. Draft saves and uploads alone never enqueue publication.
+coalesces duplicate fingerprints. Pages queues follow-up builds for newer
+published revisions, including when an earlier build rejects a changing snapshot.
+Draft saves and uploads alone never enqueue publication.
 The public build marker fingerprints published content revisions only. Builds
 check the fingerprint before and after static export and refuse a stale marker
 if content changed during the build. Static export cleanup remains mandatory.
@@ -23,7 +25,7 @@ Admin shows queued, building, live or failure status. A saved CMS change is not
 lost if deployment fails. Network-uncertain hook calls are not automatically
 repeated; the owner can explicitly retry from Admin. A build not reflected in the
 public marker within ten minutes is reported as failed/timed out. Later edits
-coalesce into a follow-up build after an active deployment. The prepare window
+coalesce into a follow-up build while an older deployment settles. The prepare window
 also reconciles an interrupted CMS response without replaying the mutation.
 
 This workflow uses the existing Workers/Durable Objects and Pages Git build

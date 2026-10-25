@@ -234,3 +234,17 @@ try {
  assert.equal((await app.fetch(new Request('https://approved.invalid/api/site-settings',{method:'POST',headers:{Cookie:'__Host-atelier_session='+testCookie,Origin:'https://approved.invalid','X-CSRF-Token':testCsrf},body:'{}'}),active)).status,405);
  console.log('PASS production rejects unknown/oversized upload lengths; activated routes retain authentication, CSRF and forbidden-settings guards');
 } finally {globalThis.fetch=original;}
+
+// The reusable product-only release keeps the same authenticated CSRF/Origin gate.
+globalThis.fetch=()=>{throw new Error('Security rejection must precede CMS access');};
+try{
+ const env={...readOnlyEnv,SANITY_ALLOW_PRODUCTION_WRITES:'approved',ADMIN_CONTENT_SCOPE:'products',ADMIN_QA_PRODUCT_ID:''};
+ for(const path of ['/api/products/test','/api/uploads','/api/publishing/retry']){
+  for(const headers of [{},{Cookie:'__Host-atelier_session='+testCookie,Origin:'https://evil.invalid','X-CSRF-Token':testCsrf},{Cookie:'__Host-atelier_session='+testCookie,Origin:'https://approved.invalid','X-CSRF-Token':'invalid'}]){
+   const r=await app.fetch(new Request('https://approved.invalid'+path,{method:'POST',headers,body:'{}'}),env);assert.equal(r.status,headers.Cookie?403:401);
+  }
+ }
+ for(const path of ['/api/about','/api/catalog-options','/api/categories'])assert.equal((await app.fetch(new Request('https://approved.invalid'+path,{method:'POST',headers:{Cookie:'__Host-atelier_session='+testCookie,Origin:'https://approved.invalid','X-CSRF-Token':testCsrf},body:'{}'}),env)).status,403);
+ await assert.rejects(uploadImage(new Request('https://approved.invalid/api/uploads',{method:'POST',headers:{'Content-Type':'image/png','Content-Length':'12'},body:'invalidimage'}),env),e=>e.status===415);
+ console.log('PASS product-only mutations and publication retries enforce owner session, exact Origin, CSRF and image signature; other content endpoints remain blocked');
+}finally{globalThis.fetch=original;}

@@ -22,6 +22,21 @@ export function publishingTarget(env: PublishingEnv) {
 type Job={phase:'queued'|'building'|'live'|'error';changed:number;settleUntil:number;started?:number;fingerprint?:string;error?:string;lastTrigger?:number;checks?:number};
 const KEY='publication';
 const reply=(data:unknown)=>Response.json(data,{headers:{'Cache-Control':'no-store'}});
+export async function publicMarker(site:string){
+  let url=site+'/publication.json';
+  for(let hop=0;hop<3;hop++){
+    const r=await fetch(url,{cache:'no-store',redirect:'manual',signal:AbortSignal.timeout(15000)});
+    if(r.status>=300&&r.status<400){
+      const next=new URL(r.headers.get('Location')||'',url);
+      void r.body?.cancel();
+      if(next.origin!==site||next.pathname!=='/publication.json'||next.username||next.password||next.hash)throw new Error('Marker redirect target rejected');
+      url=next.href;continue;
+    }
+    if(!r.ok){void r.body?.cancel();return null;}
+    return await r.json() as {projectId?:string;dataset?:string;fingerprint?:string};
+  }
+  throw new Error('Marker redirect limit');
+}
 
 // A separate named instance in the existing namespace. No sessions, passwords,
 // tokens or capability URLs are persisted here or returned to the browser.
@@ -50,8 +65,7 @@ export class PublishingQueue {
       stage='published-inventory';
       const fingerprint=await publicationFingerprint(this.env.SANITY_PROJECT_ID,this.env.SANITY_DATASET,this.env.SANITY_API_VERSION);
       stage='public-marker';
-      const response=await fetch(target.site+'/publication.json?check='+Date.now(),{cache:'no-store',redirect:'error',signal:AbortSignal.timeout(15000)});
-      const live=response.ok ? await response.json() as {projectId?:string;dataset?:string;fingerprint?:string}:null;
+      const live=await publicMarker(target.site);
       const fresh=await this.state.storage.get<Job>(KEY);if(!fresh)return;job=fresh;
       if(live?.projectId===this.env.SANITY_PROJECT_ID && live?.dataset===this.env.SANITY_DATASET && live?.fingerprint===fingerprint){
         // A prepared mutation may still be in flight; recheck its bounded window.
@@ -59,24 +73,38 @@ export class PublishingQueue {
         else await this.state.storage.put(KEY,{...job,phase:'live',error:undefined});
         return;
       }
-      if(job.phase==='building' && Date.now()-(job.started||0)<10*60000){
-        // Serialize builds. A later change waits for the prior marker, or timeout.
+      const newerContent=job.phase==='building' && fingerprint!==job.fingerprint && Date.now()-(job.started||0)>=10000;
+      if(job.phase==='building' && !newerContent && Date.now()-(job.started||0)<10*60000){
+        // A newer revision needs a follow-up even if the previous build rejects
+        // a changing snapshot. Pages queues it; never replay the same fingerprint.
         if(live?.fingerprint!==job.fingerprint){await this.state.storage.setAlarm(Date.now()+15000);return;}
       }
-      if(job.phase==='building' && Date.now()-(job.started||0)>=10*60000){
+      if(job.phase==='building' && !newerContent && Date.now()-(job.started||0)>=10*60000){
         await this.state.storage.put(KEY,{...job,phase:'error',error:'deployment-timeout'});return;
       }
       // Persist intent BEFORE a capability request. An uncertain result is never
       // automatically retried, so a disconnect cannot duplicate a deployment.
       await this.state.storage.put(KEY,{...job,phase:'building',fingerprint,started:Date.now(),lastTrigger:Date.now()});
       stage='deploy-hook';
-      const triggered=await fetch(target.hook,{method:'POST',redirect:'error',signal:AbortSignal.timeout(15000)});
+      const triggered=await fetch(target.hook,{method:'POST',redirect:'manual',signal:AbortSignal.timeout(15000)});
       void triggered.body?.cancel();
+      if(triggered.status>=300&&triggered.status<400){
+        const redirected=new URL(triggered.headers.get('Location')||'',target.hook);
+        const expected=new URL(target.hook);
+        const host=redirected.origin===expected.origin?'same-origin':'foreign-origin';
+        const path=redirected.pathname===expected.pathname?'same-path':redirected.pathname===expected.pathname+'/'?'trailing-slash':'other-path';
+        stage=`deploy-hook-http-${triggered.status}-${host}-${path}`;
+        throw new Error('Hook redirect rejected');
+      }
       if(!triggered.ok){stage='deploy-hook-http-'+triggered.status;throw new Error('hook-rejected');}
       await this.state.storage.setAlarm(Date.now()+15000);
-    }catch{
+    }catch(error){
+      // Classify runtime failures without ever persisting their raw message,
+      // which can contain the secret-bearing deploy-hook capability.
+      const message=error instanceof Error?error.message:'';
+      const category=/redirect/i.test(message)?'redirect':/1042|worker.to.worker|same.zone/i.test(message)?'worker-routing':/cache.*(unsupported|not implemented)|unsupported.*cache/i.test(message)?'cache-option':/JSON|unexpected token/i.test(message)?'invalid-json':/network|fetch failed/i.test(message)?'network':/abort|timeout/i.test(message)?'timeout':'runtime';
       const latest=await this.state.storage.get<Job>(KEY);
-      await this.state.storage.put(KEY,{...latest,phase:'error',error:stage+'-failed'});
+      await this.state.storage.put(KEY,{...latest,phase:'error',error:stage+'-'+category});
     }
   }
 }
