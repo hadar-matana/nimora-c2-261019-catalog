@@ -44,9 +44,12 @@ export class PublishingQueue {
   async alarm(){
     let job=await this.state.storage.get<Job>(KEY);if(!job)return;
     if(job.phase==='error')return;
+    let stage='configuration';
     try{
       const target=publishingTarget(this.env);
+      stage='published-inventory';
       const fingerprint=await publicationFingerprint(this.env.SANITY_PROJECT_ID,this.env.SANITY_DATASET,this.env.SANITY_API_VERSION);
+      stage='public-marker';
       const response=await fetch(target.site+'/publication.json?check='+Date.now(),{cache:'no-store',redirect:'error',signal:AbortSignal.timeout(15000)});
       const live=response.ok ? await response.json() as {projectId?:string;dataset?:string;fingerprint?:string}:null;
       const fresh=await this.state.storage.get<Job>(KEY);if(!fresh)return;job=fresh;
@@ -66,13 +69,14 @@ export class PublishingQueue {
       // Persist intent BEFORE a capability request. An uncertain result is never
       // automatically retried, so a disconnect cannot duplicate a deployment.
       await this.state.storage.put(KEY,{...job,phase:'building',fingerprint,started:Date.now(),lastTrigger:Date.now()});
+      stage='deploy-hook';
       const triggered=await fetch(target.hook,{method:'POST',redirect:'error',signal:AbortSignal.timeout(15000)});
       void triggered.body?.cancel();
-      if(!triggered.ok)throw new Error('hook-rejected');
+      if(!triggered.ok){stage='deploy-hook-http-'+triggered.status;throw new Error('hook-rejected');}
       await this.state.storage.setAlarm(Date.now()+15000);
     }catch{
       const latest=await this.state.storage.get<Job>(KEY);
-      await this.state.storage.put(KEY,{...latest,phase:'error',error:'publication-check-or-trigger-failed'});
+      await this.state.storage.put(KEY,{...latest,phase:'error',error:stage+'-failed'});
     }
   }
 }

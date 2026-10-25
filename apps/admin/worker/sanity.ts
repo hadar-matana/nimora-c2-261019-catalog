@@ -181,7 +181,7 @@ function pair(data: Catalog, key: string) {
     draft: data.products.find((d) => d._id === "drafts." + key),
   };
 }
-export function view(data: Catalog, key: string): AdminProduct {
+export function view(data: Catalog, key: string, assets = new Map(data.assets.map(a=>[a._id,a]))): AdminProduct {
   const { published, draft } = pair(data, key);
   const d = draft ?? published;
   if (!d) throw new ApiError(404, "המוצר לא נמצא");
@@ -207,16 +207,17 @@ export function view(data: Catalog, key: string): AdminProduct {
         id: i._key,
         assetId: i.asset._ref,
         alt: i.alt ?? String(d.name ?? ""),
-        src: String(data.assets.find((a) => a._id === i.asset._ref)?.url ?? ""),
+        src: String(assets.get(i.asset._ref)?.url ?? ""),
       })),
   };
 }
 export function catalogView(data: Catalog, env: SanityEnv) {
+  const assets=new Map(data.assets.map(a=>[a._id,a]));
   const keys = [
     ...new Set(data.products.map((d) => d._id.replace(/^drafts\./, ""))),
   ];
   return {
-    products: keys.map((key) => view(data, key)),
+    products: keys.map((key) => view(data, key, assets)),
     categories: data.categories.map((d) => ({
       id: d._id,
       name: String(d.name),
@@ -327,7 +328,17 @@ export async function saveProduct(
     throw new ApiError(400, "פרטי מוצר לא תקינים");
   if (!["draft", "publish", "unpublish"].includes(String(action)))
     throw new ApiError(400, "פעולה לא תקינה");
-  const data = await catalog(env);
+  // Mutating one product never needs to parse every product and image asset.
+  // Full original documents retain unknown schema fields on patch/draft saves.
+  const assetIds = Array.isArray(input.images) && input.images.length <= 10
+    ? input.images.map(image=>image && typeof image==='object' ? image.assetId : null)
+      .filter((value):value is string=>typeof value==='string' && /^image-[a-f0-9]{40}-\d+x\d+-(png|jpg|webp)$/.test(value))
+    : [];
+  const data = await query<Catalog>(env,
+    '{"products":*[_type=="product" && _id in [$id,$draft]],"categories":*[_type=="category" && !(_id in path("drafts.**"))][0...201],"assets":*[_type=="sanity.imageAsset" && _id in $assetIds]{_id,_type,_rev,_updatedAt,url}}',
+    {id:key,draft:'drafts.'+key,assetIds});
+  if(!Array.isArray(data.products)||!Array.isArray(data.categories)||!Array.isArray(data.assets)||data.products.length>2||data.categories.length>=201||data.assets.length>10)
+    throw new ApiError(502,'תשובת קטלוג לא תקינה');
   // A just-uploaded asset may precede the broad catalog query's visibility.
   // Resolve only missing image references with a targeted authenticated read;
   // never trust browser URLs or retry an upload/mutation automatically.
